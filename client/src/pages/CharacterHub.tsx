@@ -1,5 +1,6 @@
 import { useMemo, useState, useEffect } from "react";
-import { ArrowDown, ArrowLeft, ArrowRight, Bell, Bookmark, Compass, Flame, Heart, LogIn, LogOut, Menu, MessageCircle, Plus, Search, Send, Sparkles, Stars, UserRound, WandSparkles, X } from "lucide-react";\nimport { getSession, signIn, signOut, signUp, saveProfile, type AppSession } from "@/lib/supabase";
+import { ArrowDown, ArrowLeft, ArrowRight, Bell, Bookmark, Compass, Flame, Heart, LogIn, LogOut, Menu, MessageCircle, Plus, Search, Send, Sparkles, Stars, UserRound, WandSparkles, X } from "lucide-react";
+import { getSession, signIn, signOut, signUp, saveProfile, type AppSession } from "@/lib/supabase";
 type Character={id:number;name:string;role:string;desc:string;image:string;tags:string[];greeting:string;creator?:string};
 type Message={from:"user"|"bot";text:string};
 const seed:Character[]=[
