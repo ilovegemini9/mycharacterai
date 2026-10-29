@@ -21,7 +21,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(500).json({ error: "AI chat is not configured yet. Add GROQ_API_KEY in Vercel settings." });
   }
 
-  const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+  let body: any;
+  try {
+    body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+  } catch {
+    return res.status(400).json({ error: "Request body must be valid JSON." });
+  }
   const character = body?.character;
   const history = body?.messages;
 
