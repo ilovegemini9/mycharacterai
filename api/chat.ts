@@ -52,7 +52,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "llama-3.3-70b-versatile",
+        model: "openai/gpt-oss-120b",
         messages: [{ role: "system", content: systemPrompt }, ...messages],
         temperature: 0.85,
         max_tokens: 500,
@@ -64,6 +64,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       console.error("Groq API error:", upstream.status, data?.error?.message || "Unknown error");
       if (upstream.status === 429) {
         return res.status(429).json({ error: "The free AI usage limit has been reached for now. Please try again later." });
+      }
+      if (upstream.status === 401 || upstream.status === 403) {
+        return res.status(502).json({ error: "Groq rejected the API key or model access. Check GROQ_API_KEY in Vercel and make sure it is available in Production." });
+      }
+      if (upstream.status === 404) {
+        return res.status(502).json({ error: "The configured AI model was not found. Please check the model ID." });
       }
       return res.status(502).json({ error: "The AI service could not answer right now. Please try again." });
     }
