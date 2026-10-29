@@ -1,1 +1,18 @@
-{"name":"mycharacter","short_name":"mycharacter","description":"Discover characters and create your own stories.","start_url":"/","display":"standalone","background_color":"#0b0911","theme_color":"#0b0911","icons":[]}
+{
+  "name": "mycharacter — AI Character Chat",
+  "short_name": "mycharacter",
+  "description": "Discover AI characters, chat with fantasy and anime companions, and create your own characters.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0b0911",
+  "theme_color": "#0b0911",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
