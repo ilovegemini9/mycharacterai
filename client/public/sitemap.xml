@@ -1,31 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://vorqena.vercel.app/</loc></url>
-  <url><loc>https://vorqena.vercel.app/about</loc></url>
-  <url><loc>https://vorqena.vercel.app/how-vorqena-works</loc></url>
-  <url><loc>https://vorqena.vercel.app/editorial-policy</loc></url>
-  <url><loc>https://vorqena.vercel.app/sources</loc></url>
-  <url><loc>https://vorqena.vercel.app/contact</loc></url>
-  <url><loc>https://vorqena.vercel.app/privacy</loc></url>
-  <url><loc>https://vorqena.vercel.app/terms</loc></url>
-  <url><loc>https://vorqena.vercel.app/fix</loc></url>
-  <url><loc>https://vorqena.vercel.app/calculate</loc></url>
-  <url><loc>https://vorqena.vercel.app/decide</loc></url>
-  <url><loc>https://vorqena.vercel.app/when</loc></url>
-  <url><loc>https://vorqena.vercel.app/cost</loc></url>
-  <url><loc>https://vorqena.vercel.app/fix/phone-not-charging</loc></url>
-  <url><loc>https://vorqena.vercel.app/fix/dryer-not-heating</loc></url>
-  <url><loc>https://vorqena.vercel.app/calculate/percentage</loc></url>
-  <url><loc>https://vorqena.vercel.app/decide/repair-or-replace</loc></url>
-  <url><loc>https://vorqena.vercel.app/cost/fuel-cost</loc></url>
-  <url><loc>https://vorqena.vercel.app/tool/tip-calculator</loc></url>
-  <url><loc>https://vorqena.vercel.app/tool/days-between-dates</loc></url>
-  <url><loc>https://vorqena.vercel.app/tool/date-after-days</loc></url>
-  <url><loc>https://vorqena.vercel.app/tool/age-calculator</loc></url>
-  <url><loc>https://vorqena.vercel.app/tool/loan-payment</loc></url>
-  <url><loc>https://vorqena.vercel.app/tool/mortgage-payment</loc></url>
-  <url><loc>https://vorqena.vercel.app/tool/electricity-cost</loc></url>
-  <url><loc>https://vorqena.vercel.app/tool/break-even</loc></url>
-  <url><loc>https://vorqena.vercel.app/tool/car-clicking-noise</loc></url>
-  <url><loc>https://vorqena.vercel.app/tool/freeze-food</loc></url>
+  <url>
+    <loc>https://vorqena.vercel.app/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
 </urlset>
