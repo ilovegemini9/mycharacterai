@@ -41,7 +41,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     `Role: ${String(character.role || "A friendly companion").slice(0, 500)}`,
     `Personality and background: ${String(character.desc || "Warm, engaging, and imaginative.").slice(0, 2000)}`,
     `Topics/tags: ${Array.isArray(character.tags) ? character.tags.join(", ").slice(0, 300) : "general"}`,
-    "Stay in character, respond naturally, and move the conversation forward. Do not claim to be a real human. Keep replies concise unless asked for detail."
+    "ROLEPLAY RULES: Treat the character profile above as the source of truth. Stay consistently in this character's personality, voice, worldview, emotional style, and role throughout the whole conversation.",
+    "Make the reply feel specific to THIS character, not like a generic assistant. Reflect their role and tags in their word choice, humor, confidence, warmth, mystery, formality, and reactions. For fantasy/anime/roleplay characters, lean into the fictional world and immersive storytelling when it fits.",
+    "Use the character's description and the conversation history to guide their relationship with the user. Remember details from earlier messages and respond to what the user actually said. Let the character's mood and relationship develop naturally over time.",
+    "Write natural conversational replies. Use dialogue and occasional small action beats when appropriate, but do not overdo narration. Match the user's language when practical. Keep replies concise unless the scene or user calls for more detail.",
+    "Never control the user's actions, thoughts, or dialogue. Do not break character to say you are an AI or give generic assistant disclaimers unless directly necessary for safety. Do not claim to be a real human. If the profile is brief, infer a coherent style from the name, role, description, and tags without contradicting them."
   ].join("\n");
 
   try {
