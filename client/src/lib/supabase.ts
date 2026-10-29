@@ -73,7 +73,6 @@ export async function saveProfile(session: AppSession) {
   });
 }
 
-
 export type CharacterRecord = {
   id: string;
   creator_id: string | null;
@@ -85,6 +84,8 @@ export type CharacterRecord = {
   tags: string[];
   is_public: boolean;
 };
+
+export type ChatMessage = { id?: string; sender: "user" | "character"; content: string; created_at?: string };
 
 async function restRequest(path: string, session: AppSession, init: RequestInit = {}) {
   if (!SUPABASE_URL || !SUPABASE_KEY) throw new Error("Database service is not configured yet.");
@@ -99,19 +100,13 @@ async function restRequest(path: string, session: AppSession, init: RequestInit 
   });
   const text = await response.text();
   const data = text ? JSON.parse(text) : null;
-  if (!response.ok) {
-    throw new Error(data?.message || data?.hint || "Could not save data to the database.");
-  }
+  if (!response.ok) throw new Error(data?.message || data?.hint || "Could not save data to the database.");
   return data;
 }
 
-export async function createCharacterRecord(
-  session: AppSession,
-  character: { name: string; role: string; description: string; greeting: string; image_url: string; tags: string[] },
-): Promise<CharacterRecord> {
+export async function createCharacterRecord(session: AppSession, character: { name: string; role: string; description: string; greeting: string; image_url: string; tags: string[] }): Promise<CharacterRecord> {
   const rows = await restRequest("characters?select=id,creator_id,name,role,description,greeting,image_url,tags,is_public", session, {
-    method: "POST",
-    headers: { Prefer: "return=representation" },
+    method: "POST", headers: { Prefer: "return=representation" },
     body: JSON.stringify({ ...character, creator_id: session.user.id, is_public: true }),
   });
   if (!Array.isArray(rows) || !rows[0]?.id) throw new Error("The database did not return the created character.");
@@ -121,4 +116,45 @@ export async function createCharacterRecord(
 export async function listPublicCharacterRecords(session: AppSession): Promise<CharacterRecord[]> {
   const rows = await restRequest("characters?select=id,creator_id,name,role,description,greeting,image_url,tags,is_public&is_public=eq.true&order=created_at.desc", session);
   return Array.isArray(rows) ? rows as CharacterRecord[] : [];
+}
+
+export async function listSavedCharacterIds(session: AppSession): Promise<string[]> {
+  const rows = await restRequest("saved_characters?select=character_id&user_id=eq." + encodeURIComponent(session.user.id), session);
+  return Array.isArray(rows) ? rows.map((row: { character_id: string }) => row.character_id) : [];
+}
+
+export async function setCharacterSaved(session: AppSession, characterId: string, saved: boolean) {
+  if (saved) {
+    await restRequest("saved_characters", session, {
+      method: "POST", headers: { Prefer: "resolution=ignore-duplicates,return=minimal" },
+      body: JSON.stringify({ user_id: session.user.id, character_id: characterId }),
+    });
+  } else {
+    await restRequest("saved_characters?user_id=eq." + encodeURIComponent(session.user.id) + "&character_id=eq." + encodeURIComponent(characterId), session, { method: "DELETE" });
+  }
+}
+
+export async function getOrCreateChat(session: AppSession, characterId: string, title: string): Promise<string> {
+  const existing = await restRequest("chats?select=id&user_id=eq." + encodeURIComponent(session.user.id) + "&character_id=eq." + encodeURIComponent(characterId) + "&order=updated_at.desc&limit=1", session);
+  if (Array.isArray(existing) && existing[0]?.id) return existing[0].id as string;
+  const rows = await restRequest("chats?select=id", session, {
+    method: "POST", headers: { Prefer: "return=representation" },
+    body: JSON.stringify({ user_id: session.user.id, character_id: characterId, title }),
+  });
+  if (!Array.isArray(rows) || !rows[0]?.id) throw new Error("Could not create the conversation.");
+  return rows[0].id as string;
+}
+
+export async function loadChatMessages(session: AppSession, chatId: string): Promise<ChatMessage[]> {
+  const rows = await restRequest("messages?select=id,sender,content,created_at&chat_id=eq." + encodeURIComponent(chatId) + "&order=created_at.asc", session);
+  return Array.isArray(rows) ? rows as ChatMessage[] : [];
+}
+
+export async function saveChatMessages(session: AppSession, chatId: string, messages: ChatMessage[]) {
+  const rows = messages.map(message => ({ chat_id: chatId, sender: message.sender, content: message.content }));
+  if (!rows.length) return;
+  await restRequest("messages?on_conflict=id", session, {
+    method: "POST", headers: { Prefer: "return=minimal" },
+    body: JSON.stringify(rows),
+  });
 }
