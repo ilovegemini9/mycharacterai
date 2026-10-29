@@ -72,3 +72,53 @@ export async function saveProfile(session: AppSession) {
     body: JSON.stringify({ id: session.user.id, username: session.user.email?.split("@")[0] || null, updated_at: new Date().toISOString() }),
   });
 }
+
+
+export type CharacterRecord = {
+  id: string;
+  creator_id: string | null;
+  name: string;
+  role: string;
+  description: string;
+  greeting: string;
+  image_url: string;
+  tags: string[];
+  is_public: boolean;
+};
+
+async function restRequest(path: string, session: AppSession, init: RequestInit = {}) {
+  if (!SUPABASE_URL || !SUPABASE_KEY) throw new Error("Database service is not configured yet.");
+  const response = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    ...init,
+    headers: {
+      apikey: SUPABASE_KEY,
+      Authorization: `Bearer ${session.access_token}`,
+      "Content-Type": "application/json",
+      ...(init.headers || {}),
+    },
+  });
+  const text = await response.text();
+  const data = text ? JSON.parse(text) : null;
+  if (!response.ok) {
+    throw new Error(data?.message || data?.hint || "Could not save data to the database.");
+  }
+  return data;
+}
+
+export async function createCharacterRecord(
+  session: AppSession,
+  character: { name: string; role: string; description: string; greeting: string; image_url: string; tags: string[] },
+): Promise<CharacterRecord> {
+  const rows = await restRequest("characters?select=id,creator_id,name,role,description,greeting,image_url,tags,is_public", session, {
+    method: "POST",
+    headers: { Prefer: "return=representation" },
+    body: JSON.stringify({ ...character, creator_id: session.user.id, is_public: true }),
+  });
+  if (!Array.isArray(rows) || !rows[0]?.id) throw new Error("The database did not return the created character.");
+  return rows[0] as CharacterRecord;
+}
+
+export async function listPublicCharacterRecords(session: AppSession): Promise<CharacterRecord[]> {
+  const rows = await restRequest("characters?select=id,creator_id,name,role,description,greeting,image_url,tags,is_public&is_public=eq.true&order=created_at.desc", session);
+  return Array.isArray(rows) ? rows as CharacterRecord[] : [];
+}
