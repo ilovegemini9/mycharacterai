@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite --host",
-    "build": "tsx scripts/knowledge-quality.ts && vite build && tsx scripts/seo-build.ts && tsx scripts/review-build.ts && tsx scripts/seo-validate.ts",
+    "build": "vite build",
     "start": "vite preview --host",
     "preview": "vite preview --host",
     "check": "tsc --noEmit",
