@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://vorqena.vercel.app/sitemap.xml
+Sitemap: https://character-cai.vercel.app/sitemap.xml
