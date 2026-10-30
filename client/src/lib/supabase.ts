@@ -12,14 +12,64 @@ function saveSession(session: AppSession | null) { try { if (session) localStora
 async function authRequest(path: string, body: Record<string, unknown>) {
   if (!SUPABASE_URL || !SUPABASE_KEY) throw new Error("Account service is not configured yet.");
   const response = await fetch(`${SUPABASE_URL}/auth/v1/${path}`, { method: "POST", headers: { "Content-Type": "application/json", apikey: SUPABASE_KEY }, body: JSON.stringify(body) });
-  const data = await response.json();
-  if (!response.ok) throw new Error(data?.msg || data?.message || data?.error_description || "Could not authenticate.");
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const raw = String(data?.msg || data?.message || data?.error_description || data?.error || "");
+    const normalized = raw.toLowerCase();
+    if (normalized.includes("email not confirmed")) throw new Error("Your email is not confirmed yet. Check your inbox and confirm your account first.");
+    if (normalized.includes("invalid login credentials")) throw new Error("Email or password is incorrect.");
+    if (normalized.includes("user already registered")) throw new Error("An account with this email already exists. Sign in instead.");
+    if (normalized.includes("password should be at least")) throw new Error(raw);
+    throw new Error(raw || "Could not authenticate.");
+  }
   return data;
 }
-export function signInWithGoogle(): void { if (!SUPABASE_URL || !SUPABASE_KEY) throw new Error("Account service is not configured yet."); const redirectTo=window.location.origin; window.location.assign(`${SUPABASE_URL}/auth/v1/authorize?provider=google&redirect_to=${encodeURIComponent(redirectTo)}`); }
-export async function completeOAuthRedirect(): Promise<AppSession|null> { if (!SUPABASE_URL || !SUPABASE_KEY) return null; const params=new URLSearchParams(window.location.hash.replace(/^#/,"")); const access_token=params.get("access_token"); const refresh_token=params.get("refresh_token"); if (!access_token || !refresh_token) return null; const response=await fetch(`${SUPABASE_URL}/auth/v1/user`,{headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${access_token}`}}); const user=await response.json(); if(!response.ok||!user?.id) throw new Error("Could not complete Google sign in."); const session={access_token,refresh_token,user:{id:user.id,email:user.email}} as AppSession; saveSession(session); window.history.replaceState(null,"",window.location.pathname+window.location.search); return session; }
-export async function signIn(email: string, password: string): Promise<AppSession> { const data = await authRequest("token?grant_type=password", { email, password }); if (!data.access_token || !data.user?.id) throw new Error("No session was returned."); const session = data as AppSession; saveSession(session); return session; }
-export async function signUp(email: string, password: string): Promise<{ session: AppSession | null; needsEmailConfirmation: boolean }> { const data = await authRequest("signup", { email, password }); if (data.access_token && data.user?.id) { const session = data as AppSession; saveSession(session); return { session, needsEmailConfirmation: false }; } return { session: null, needsEmailConfirmation: true }; }
+
+export function signInWithGoogle(): void {
+  if (!SUPABASE_URL || !SUPABASE_KEY) throw new Error("Account service is not configured yet.");
+  const redirectTo = `${window.location.origin}${window.location.pathname}`;
+  const url = new URL(`${SUPABASE_URL}/auth/v1/authorize`);
+  url.searchParams.set("provider", "google");
+  url.searchParams.set("redirect_to", redirectTo);
+  window.location.assign(url.toString());
+}
+
+export async function completeOAuthRedirect(): Promise<AppSession|null> {
+  if (!SUPABASE_URL || !SUPABASE_KEY) return null;
+  const hash = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+  const query = new URLSearchParams(window.location.search);
+  const oauthError = hash.get("error_description") || query.get("error_description") || hash.get("error") || query.get("error");
+  if (oauthError) throw new Error(decodeURIComponent(oauthError.replace(/\+/g, " ")));
+  const access_token = hash.get("access_token");
+  const refresh_token = hash.get("refresh_token");
+  if (!access_token || !refresh_token) return null;
+  const response = await fetch(`${SUPABASE_URL}/auth/v1/user`, { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${access_token}` } });
+  const user = await response.json().catch(() => null);
+  if (!response.ok || !user?.id) throw new Error("Could not complete Google sign in.");
+  const session = { access_token, refresh_token, user: { id: user.id, email: user.email } } as AppSession;
+  saveSession(session);
+  window.history.replaceState(null, "", window.location.pathname + window.location.search);
+  return session;
+}
+
+export async function signIn(email: string, password: string): Promise<AppSession> {
+  const data = await authRequest("token?grant_type=password", { email: email.trim(), password });
+  if (!data.access_token || !data.user?.id) throw new Error("No session was returned.");
+  const session = data as AppSession;
+  saveSession(session);
+  return session;
+}
+
+export async function signUp(email: string, password: string): Promise<{ session: AppSession | null; needsEmailConfirmation: boolean }> {
+  const data = await authRequest("signup", { email: email.trim(), password });
+  if (data.access_token && data.user?.id) {
+    const session = data as AppSession;
+    saveSession(session);
+    return { session, needsEmailConfirmation: false };
+  }
+  return { session: null, needsEmailConfirmation: true };
+}
+
 export async function signOut() { const session = getSession(); if (session && SUPABASE_URL && SUPABASE_KEY) await fetch(`${SUPABASE_URL}/auth/v1/logout`, { method: "POST", headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${session.access_token}` } }).catch(() => undefined); saveSession(null); }
 export async function saveProfile(session: AppSession) { if (!SUPABASE_URL || !SUPABASE_KEY) return; await fetch(`${SUPABASE_URL}/rest/v1/profiles`, { method: "POST", headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json", Prefer: "resolution=merge-duplicates,return=minimal" }, body: JSON.stringify({ id: session.user.id, username: session.user.email?.split("@")[0] || null, updated_at: new Date().toISOString() }) }); }
 
@@ -33,7 +83,7 @@ async function restRequest(path: string, session: AppSession, init: RequestInit 
   if (!response.ok) throw new Error(data?.message || data?.hint || "Could not save data to the database."); return data;
 }
 export async function createCharacterRecord(session: AppSession, character: { name: string; role: string; description: string; greeting: string; personality: string; scenario: string; backstory: string; image_url: string; tags: string[]; is_public: boolean; visibility?: "public"|"private"|"unlisted" }): Promise<CharacterRecord> { const rows = await restRequest("characters?select=id,creator_id,name,role,description,greeting,personality,scenario,backstory,image_url,tags,is_public,visibility", session, { method: "POST", headers: { Prefer: "return=representation" }, body: JSON.stringify({ ...character, creator_id: session.user.id }) }); if (!Array.isArray(rows) || !rows[0]?.id) throw new Error("The database did not return the created character."); return rows[0] as CharacterRecord; }
-export async function listPublicCharacterRecords(session: AppSession): Promise<CharacterRecord[]> { const owner = encodeURIComponent(session.user.id); const rows = await restRequest("character_discovery?select=*&order=created_at.desc", session); return Array.isArray(rows) ? rows as CharacterRecord[] : []; }
+export async function listPublicCharacterRecords(session: AppSession): Promise<CharacterRecord[]> { const rows = await restRequest("character_discovery?select=*&order=created_at.desc", session); return Array.isArray(rows) ? rows as CharacterRecord[] : []; }
 export async function listSavedCharacterIds(session: AppSession): Promise<string[]> { const rows = await restRequest("saved_characters?select=character_id&user_id=eq." + encodeURIComponent(session.user.id), session); return Array.isArray(rows) ? rows.map((row: { character_id: string }) => row.character_id) : []; }
 export async function setCharacterSaved(session: AppSession, characterId: string, saved: boolean) { if (saved) await restRequest("saved_characters", session, { method: "POST", headers: { Prefer: "resolution=ignore-duplicates,return=minimal" }, body: JSON.stringify({ user_id: session.user.id, character_id: characterId }) }); else await restRequest("saved_characters?user_id=eq." + encodeURIComponent(session.user.id) + "&character_id=eq." + encodeURIComponent(characterId), session, { method: "DELETE" }); }
 export async function getOrCreateChat(session: AppSession, characterId: string, title: string): Promise<string> { const existing = await restRequest("chats?select=id&user_id=eq." + encodeURIComponent(session.user.id) + "&character_id=eq." + encodeURIComponent(characterId) + "&order=updated_at.desc&limit=1", session); if (Array.isArray(existing) && existing[0]?.id) return existing[0].id as string; const rows = await restRequest("chats?select=id", session, { method: "POST", headers: { Prefer: "return=representation" }, body: JSON.stringify({ user_id: session.user.id, character_id: characterId, title }) }); if (!Array.isArray(rows) || !rows[0]?.id) throw new Error("Could not create the conversation."); return rows[0].id as string; }
