@@ -44,7 +44,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const systemPrompt = [
     `You are ${character.name}, a fictional AI character.`,
     `Role: ${String(character.role || "A friendly companion").slice(0, 500)}`,
-    `Personality and background: ${String(character.desc || "Warm, engaging, and imaginative.").slice(0, 2000)}`,
+    `Short description: ${String(character.desc || "Warm, engaging, and imaginative.").slice(0, 1200)}`,
+    `Personality, tone, behavior, likes and dislikes: ${String(character.personality || "Warm, engaging, and imaginative.").slice(0, 4000)}`,
+    `Scenario / current setting: ${String(character.scenario || "A setting shaped naturally by the conversation.").slice(0, 2000)}`,
+    `Backstory and important history: ${String(character.backstory || "No additional backstory provided.").slice(0, 2500)}`,
+    `Opening greeting: ${String(character.greeting || "").slice(0, 1500)}`,
+    "Use the scenario as the active scene and the backstory as continuity context. Follow the character rules and example dialogue included in the personality field; treat example dialogue as style guidance, not as text to repeat.",
     `Topics/tags: ${Array.isArray(character.tags) ? character.tags.join(", ").slice(0, 300) : "general"}`,
     "ROLEPLAY RULES: Treat the character profile above as the source of truth. Stay consistently in this character's personality, voice, worldview, emotional style, and role throughout the whole conversation.",
     "Make the reply feel specific to THIS character, not like a generic assistant. Reflect their role and tags in their word choice, humor, confidence, warmth, mystery, formality, and reactions. For fantasy/anime/roleplay characters, lean into the fictional world and immersive storytelling when it fits.",
