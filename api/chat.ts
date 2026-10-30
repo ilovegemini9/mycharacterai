@@ -70,29 +70,48 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         messages: [{ role: "system", content: systemPrompt }, ...messages],
         temperature: 0.85,
         max_tokens: 500,
+        stream: true,
       }),
     });
 
-    const data = await upstream.json();
-    if (!upstream.ok) {
+    if (!upstream.ok || !upstream.body) {
+      const data = await upstream.json().catch(() => ({}));
       console.error("Groq API error:", upstream.status, data?.error?.message || "Unknown error");
-      if (upstream.status === 429) {
-        return res.status(429).json({ error: "The free AI usage limit has been reached for now. Please try again later." });
-      }
-      if (upstream.status === 401 || upstream.status === 403) {
-        return res.status(502).json({ error: "Groq rejected the API key or model access. Check GROQ_API_KEY in Vercel and make sure it is available in Production." });
-      }
-      if (upstream.status === 404) {
-        return res.status(502).json({ error: "The configured AI model was not found. Please check the model ID." });
-      }
+      if (upstream.status === 429) return res.status(429).json({ error: "The free AI usage limit has been reached for now. Please try again later." });
+      if (upstream.status === 401 || upstream.status === 403) return res.status(502).json({ error: "Groq rejected the API key or model access. Check GROQ_API_KEY in Vercel." });
+      if (upstream.status === 404) return res.status(502).json({ error: "The configured AI model was not found. Please check the model ID." });
       return res.status(502).json({ error: "The AI service could not answer right now. Please try again." });
     }
 
-    const reply = data?.choices?.[0]?.message?.content;
-    if (typeof reply !== "string" || !reply.trim()) {
-      return res.status(502).json({ error: "The AI returned an empty reply. Please try again." });
+    res.statusCode = 200;
+    res.setHeader("Content-Type", "text/plain; charset=utf-8");
+    res.setHeader("Transfer-Encoding", "chunked");
+    res.setHeader("X-Content-Type-Options", "nosniff");
+    const reader = upstream.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+    let emitted = false;
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split("\\n");
+      buffer = lines.pop() || "";
+      for (const line of lines) {
+        if (!line.startsWith("data:")) continue;
+        const payload = line.slice(5).trim();
+        if (!payload || payload === "[DONE]") continue;
+        try {
+          const event = JSON.parse(payload);
+          const delta = event?.choices?.[0]?.delta?.content;
+          if (typeof delta === "string" && delta) { res.write(delta); emitted = true; }
+        } catch { /* Ignore incomplete or non-JSON SSE frames. */ }
+      }
     }
-    return res.status(200).json({ reply: reply.trim() });
+    if (!emitted) {
+      if (!res.headersSent) return res.status(502).json({ error: "The AI returned an empty reply. Please try again." });
+    }
+    return res.end();
   } catch (error) {
     console.error("Chat API request failed:", error);
     return res.status(502).json({ error: "Could not reach the AI service. Please try again." });
