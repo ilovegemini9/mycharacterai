@@ -12,3 +12,129 @@
 /* Discovery card metadata */
 .card-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 9px;color:#9c8baa;font-size:8px}.card-meta span{display:inline-flex;align-items:center;gap:4px}.card-meta svg{color:#c39be8}.card-greeting{margin:0 0 10px!important;padding:8px 9px;border-left:2px solid #76518f;border-radius:0 6px 6px 0;background:#1a1322;color:#b9a9c5!important;font-size:9px!important;line-height:1.55!important;min-height:0!important;-webkit-line-clamp:2!important}.card-bottom-info{display:grid;gap:6px;min-width:0}.card-creator{overflow:hidden;color:#8e7e9b;font-size:8px;text-overflow:ellipsis;white-space:nowrap}.card-visibility{position:absolute;top:11px;right:10px;padding:5px 7px;border:1px solid #f1dfff2a;border-radius:5px;background:#140c20c9;color:#f1dfff;font-size:7px;font-weight:700;letter-spacing:.6px}
 @media(max-width:700px){.card-meta{gap:7px;font-size:7px}.card-greeting{font-size:8px!important;padding:7px}.card-creator{font-size:7px}}
+
+
+/* Character.AI-inspired layout polish: clearer hierarchy, calmer typography, responsive discovery */
+:root{font-family:'DM Sans',Inter,system-ui,sans-serif}
+body{font-size:14px}
+.sidebar{width:260px;padding:28px 18px 16px}
+.brand{font-size:23px;padding-bottom:34px}
+.side-label{font-size:11px;letter-spacing:1.35px}
+.nav-item{height:44px;font-size:14px;border-radius:11px}
+.main-content{margin-left:260px;padding:0 42px}
+.topbar{height:82px;gap:16px}
+.top-search{height:46px;max-width:620px;border-radius:13px;padding:0 15px}
+.top-search input{font-size:14px}
+.create-top,.auth-text-btn,.auth-create-btn{height:43px;font-size:13px;border-radius:11px}
+.discover,.listing{max-width:1360px}
+.hero{min-height:420px;margin-top:28px;border-radius:22px}
+.hero-copy{padding-left:48px;max-width:58%}
+.eyebrow{font-size:11px;letter-spacing:1.55px}
+.hero h1{font-size:clamp(42px,4.4vw,62px);line-height:1.04;letter-spacing:-2.7px}
+.hero-copy>p{font-size:15px;line-height:1.75;max-width:520px}
+.primary-btn,.secondary-btn{height:47px;padding:0 18px;font-size:13px;border-radius:11px}
+.proof{font-size:12px}
+.section-heading{margin:42px 0 20px}
+.section-heading h2,.listing h1{font-size:29px;letter-spacing:-.8px}
+.section-heading p,.section-subtitle{font-size:13px}
+.tabs{gap:9px;padding-bottom:19px}
+.tabs button{height:39px;padding:0 15px;font-size:12px;border-radius:10px}
+.character-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.character-card{border-radius:16px}
+.card-image-button{height:205px}
+.card-body{padding:15px}
+.card-title-row h3{font-size:15px}
+.role{font-size:11px}
+.card-body>p{font-size:12px;line-height:1.65;min-height:40px}
+.card-meta{font-size:10px;gap:12px}
+.card-greeting{font-size:11px!important;padding:9px 10px}
+.tags span{font-size:10px;padding:5px 8px}
+.card-creator{font-size:10px}
+.create-banner{margin:42px 0 32px;padding:27px 29px;border-radius:17px}
+.create-banner h2{font-size:19px}
+.create-banner p{font-size:12px}
+.create-banner small{font-size:10px}
+footer{font-size:11px}
+.modal-backdrop{padding:24px}
+.modal{width:min(100%,560px);padding:30px;border-radius:20px}
+.modal-head h2{font-size:28px;letter-spacing:-.7px}
+.modal-head p{font-size:13px;line-height:1.6}
+.modal label{font-size:12px}
+.modal input,.modal textarea,.modal select{font-size:14px;padding:13px 14px;border-radius:10px}
+.note{font-size:11px}
+@media(max-width:1250px){
+ .main-content{padding:0 28px}
+ .character-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .hero-copy{padding-left:36px;max-width:62%}
+}
+@media(max-width:950px){
+ .main-content{padding:0 22px}
+ .hero{min-height:380px}
+ .hero-copy{padding-left:28px;max-width:68%}
+ .hero h1{font-size:clamp(38px,5.5vw,50px)}
+ .character-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+ .card-image-button{height:190px}
+}
+@media(max-width:700px){
+ .sidebar{width:min(84vw,300px);padding:23px 16px 14px}
+ .main-content{margin-left:0;padding:0 16px}
+ .topbar{height:66px;gap:9px}
+ .mobile-menu{width:38px;height:38px;border-radius:11px}
+ .mobile-brand{font-size:14px}
+ .top-search{height:39px;padding:0 10px;border-radius:11px}
+ .top-search input{font-size:12px}
+ .create-top{height:38px;padding:0 10px;font-size:11px}
+ .auth-text-btn,.auth-create-btn{height:36px;padding:0 9px;font-size:10px}
+ .hero{min-height:440px;margin-top:15px;border-radius:17px}
+ .hero-copy{padding:25px 20px;max-width:100%}
+ .eyebrow{font-size:9px}
+ .hero h1{font-size:clamp(36px,10vw,46px);line-height:1.05;letter-spacing:-1.8px;margin:16px 0 12px}
+ .hero-copy>p{font-size:13px;line-height:1.65;max-width:440px}
+ .hero-actions{gap:8px}
+ .primary-btn,.secondary-btn{height:42px;padding:0 13px;font-size:11px}
+ .proof{font-size:10px;margin-top:17px}
+ .hero-art{width:68%;height:215px;right:0;bottom:0;top:auto}
+ .hero-art>img{height:125%;width:70%}
+ .section-heading{margin:30px 0 14px;gap:10px}
+ .section-heading h2{font-size:22px}
+ .section-heading p{font-size:11px}
+ .view-all{font-size:10px}
+ .tabs{margin-right:-16px;padding-right:16px;gap:7px}
+ .tabs button{height:36px;padding:0 12px;font-size:11px}
+ .character-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .card-image-button{height:clamp(125px,42vw,175px)}
+ .card-body{padding:10px}
+ .card-title-row h3{font-size:12px}
+ .role{font-size:9px}
+ .card-body>p{font-size:10px;line-height:1.55;min-height:45px}
+ .card-meta{font-size:8px;gap:7px}
+ .card-greeting{font-size:9px!important;padding:7px 8px}
+ .tags span{font-size:8px;padding:4px 6px}
+ .card-creator{font-size:8px}
+ .create-banner{margin:28px 0 22px;padding:17px;gap:12px}
+ .create-banner h2{font-size:15px}
+ .create-banner p{font-size:11px}
+ .create-banner>.primary-btn{width:100%;margin:0}
+ footer{font-size:9px}
+ .modal-backdrop{align-items:flex-end;padding:10px}
+ .modal{width:100%;max-height:90dvh;padding:22px 18px;border-radius:20px 20px 14px 14px}
+ .modal-head h2{font-size:23px}
+ .modal-head p{font-size:12px}
+ .modal input,.modal textarea,.modal select{font-size:16px}
+ .modal-actions{flex-wrap:wrap}
+ .modal-actions>*{flex:1 1 auto}
+}
+@media(max-width:380px){
+ .main-content{padding:0 12px}
+ .topbar{gap:6px}
+ .mobile-brand{font-size:12px}
+ .top-search input{font-size:10px}
+ .create-top{font-size:9px;padding:0 7px}
+ .hero{min-height:420px}
+ .hero-copy{padding:22px 16px}
+ .hero h1{font-size:35px}
+ .character-grid{gap:8px}
+ .card-image-button{height:120px}
+ .card-body{padding:8px}
+ .card-title-row h3{font-size:11px}
+}
