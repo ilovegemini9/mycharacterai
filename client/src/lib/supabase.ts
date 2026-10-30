@@ -49,3 +49,26 @@ export async function toggleCharacterLike(session:AppSession,characterId:string,
 export async function followCreator(session:AppSession,creatorId:string,following:boolean){if(following)await restRequest("creator_follows?follower_id=eq."+encodeURIComponent(session.user.id)+"&creator_id=eq."+encodeURIComponent(creatorId),session,{method:"DELETE"});else await restRequest("creator_follows",session,{method:"POST",headers:{Prefer:"resolution=ignore-duplicates,return=minimal"},body:JSON.stringify({follower_id:session.user.id,creator_id:creatorId})});}
 export async function reportCharacter(session:AppSession,characterId:string,reason:string){await restRequest("character_reports",session,{method:"POST",headers:{Prefer:"return=minimal"},body:JSON.stringify({character_id:characterId,reporter_id:session.user.id,reason})});}
 export async function blockCreator(session:AppSession,creatorId:string){await restRequest("creator_blocks",session,{method:"POST",headers:{Prefer:"resolution=ignore-duplicates,return=minimal"},body:JSON.stringify({blocker_id:session.user.id,creator_id:creatorId})});}
+
+export type UserPreferences = { theme?: "dark" | "light" | "system"; language?: string; content_filters?: string[]; [key: string]: unknown };
+export type CharacterMemory = { id: string; user_id: string; character_id: string; content: string; created_at: string; updated_at: string };
+export async function loadUserPreferences(session: AppSession): Promise<UserPreferences> {
+ const rows = await restRequest("user_preferences?select=preferences&user_id=eq."+encodeURIComponent(session.user.id)+"&limit=1", session);
+ return Array.isArray(rows) && rows[0]?.preferences && typeof rows[0].preferences === "object" ? rows[0].preferences as UserPreferences : {};
+}
+export async function saveUserPreferences(session: AppSession, preferences: UserPreferences): Promise<void> {
+ await restRequest("user_preferences", session, { method:"POST", headers:{Prefer:"resolution=merge-duplicates,return=minimal"}, body:JSON.stringify({user_id:session.user.id,preferences,updated_at:new Date().toISOString()}) });
+}
+export async function listCharacterMemories(session: AppSession, characterId: string): Promise<CharacterMemory[]> {
+ const rows = await restRequest("character_memories?select=id,user_id,character_id,content,created_at,updated_at&user_id=eq."+encodeURIComponent(session.user.id)+"&character_id=eq."+encodeURIComponent(characterId)+"&order=updated_at.desc&limit=100", session);
+ return Array.isArray(rows) ? rows as CharacterMemory[] : [];
+}
+export async function addCharacterMemory(session: AppSession, characterId: string, content: string): Promise<void> {
+ await restRequest("character_memories", session, { method:"POST", headers:{Prefer:"return=minimal"}, body:JSON.stringify({user_id:session.user.id,character_id:characterId,content:content.trim()}) });
+}
+export async function deleteCharacterMemory(session: AppSession, memoryId: string): Promise<void> {
+ await restRequest("character_memories?id=eq."+encodeURIComponent(memoryId)+"&user_id=eq."+encodeURIComponent(session.user.id), session, { method:"DELETE" });
+}
+export async function reportMessage(session: AppSession, messageId: string, reason: string): Promise<void> {
+ await restRequest("message_reports", session, { method:"POST", headers:{Prefer:"return=minimal"}, body:JSON.stringify({message_id:messageId,reporter_id:session.user.id,reason:reason.trim()}) });
+}
