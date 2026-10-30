@@ -44,9 +44,9 @@ export function routeQuestion(query: string): QuestionRoute {
     return { kind: "unknown", intent: value === "calculate" || value.includes("calculator") ? "calculate" : undefined, confidence: "low" };
   }
 
-  const percentOfValue = /\\b\\d+(?:\\.\\d+)?\\s*(?:percent|per cent|%)\\s+of\\s+\\d+(?:\\.\\d+)?\\b/.test(value);
+  const percentOfValue = /\b\d+(?:\.\d+)?\s*(?:percent|per cent|%)\s+of\s+\d+(?:\.\d+)?\b/.test(value);
   if (percentOfValue) {
-    const percentageRecord = knowledge.find(item => item.slug.replace(/^\\//, "") === "calculate/percentage");
+    const percentageRecord = knowledge.find(item => item.slug.replace(/^\//, "") === "calculate/percentage");
     if (percentageRecord) return { kind: "knowledge", intent: percentageRecord.intent, knowledge: percentageRecord, confidence: "high" };
   }
 
