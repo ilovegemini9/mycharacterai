@@ -5,7 +5,7 @@ export const phoneNotCharging: KnowledgeRecord = {
   intent: "fix",
   title: "Phone Won't Charge",
   slug: "/fix/phone-not-charging",
-  aliases: ["phone isn't charging", "phone not charging", "phone won't charge", "phone charging slowly", "phone only charges at an angle"],
+  aliases: ["phone isn't charging", "phone not charging", "phone won't charge", "phone charging slowly", "phone only charges at an angle", "iphone won't charge", "my iphone won't charge", "android phone won't charge"],
   answer: "Start with the cable, charger, outlet, and charging port before assuming the battery is bad. Most charging problems can be narrowed down with a few safe checks.",
   causes: ["Damaged cable or power adapter", "Debris, moisture, or damage in the charging port", "A software or charging-system fault", "A worn or failing battery", "A damaged charging port or internal hardware"],
   steps: ["Try a known-good cable, charger, and wall outlet. If possible, test the same charger with another compatible device.", "Inspect the charging port with a light. If you see lint or debris, follow the manufacturer's cleaning guidance; do not insert metal objects or force anything into the port.", "If the phone shows a moisture warning, disconnect it and follow the manufacturer's drying guidance rather than trying to charge through the warning.", "Restart the phone and try charging again. If it is completely unresponsive, leave it connected to a known-good charger for a short period before trying to power it on.", "If charging works only when the cable is held at an angle, stop stressing the connector and have the port inspected.", "If the problem continues with known-good charging equipment, check the manufacturer's support guidance or arrange professional repair."],
