@@ -95,7 +95,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const { value, done } = await reader.read();
       if (done) break;
       buffer += decoder.decode(value, { stream: true });
-      const lines = buffer.split("\\n");
+      const lines = buffer.split("\n");
       buffer = lines.pop() || "";
       for (const line of lines) {
         if (!line.startsWith("data:")) continue;
