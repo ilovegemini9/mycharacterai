@@ -29,6 +29,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
   const character = body?.character;
   const history = body?.messages;
+  const rawMemories = Array.isArray(body?.memories) ? body.memories : [];
 
   if (!character || typeof character.name !== "string" || !Array.isArray(history)) {
     return res.status(400).json({ error: "Character and messages are required." });
@@ -41,6 +42,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     .filter((m: any) => (m?.role === "user" || m?.role === "assistant") && typeof m?.content === "string")
     .map((m: any) => ({ role: m.role, content: m.content.slice(0, 4000) }));
 
+  const memories = rawMemories
+    .filter((m: any) => typeof m?.content === "string")
+    .map((m: any) => m.content.trim().slice(0, 700))
+    .filter(Boolean)
+    .slice(0, 40);
+
+  const recentAssistantReplies = messages
+    .filter((m: { role: string }) => m.role === "assistant")
+    .slice(-3)
+    .map((m: { content: string }) => m.content.slice(0, 900))
+    .join("\n---\n");
+
+  const memoryContext = memories.length
+    ? [
+        "PERSISTENT USER MEMORY: The following facts were explicitly saved for this character conversation. Treat them as durable context, but do not invent additional facts from them.",
+        ...memories.map((memory: string, index: number) => `${index + 1}. ${memory}`),
+        "If a saved memory conflicts with something the user says directly in the current conversation, prefer the user's current statement and do not argue with them about the old memory.",
+      ].join("\n")
+    : "PERSISTENT USER MEMORY: No saved memories are available for this conversation.";
+
   const systemPrompt = [
     `You are ${character.name}, a fictional AI character.`,
     `Role: ${String(character.role || "A friendly companion").slice(0, 500)}`,
@@ -51,9 +72,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     `Opening greeting: ${String(character.greeting || "").slice(0, 1500)}`,
     "Use the scenario as the active scene and the backstory as continuity context. Follow the character rules and example dialogue included in the personality field; treat example dialogue as style guidance, not as text to repeat.",
     `Topics/tags: ${Array.isArray(character.tags) ? character.tags.join(", ").slice(0, 300) : "general"}`,
+    memoryContext,
     "ROLEPLAY RULES: Treat the character profile above as the source of truth. Stay consistently in this character's personality, voice, worldview, emotional style, and role throughout the whole conversation.",
     "Make the reply feel specific to THIS character, not like a generic assistant. Reflect their role and tags in their word choice, humor, confidence, warmth, mystery, formality, and reactions. For fantasy/anime/roleplay characters, lean into the fictional world and immersive storytelling when it fits.",
-    "Use the character's description and the conversation history to guide their relationship with the user. Remember details from earlier messages and respond to what the user actually said. Let the character's mood and relationship develop naturally over time.",
+    "CONTINUITY RULES: Treat established facts in the conversation as persistent canon. Keep track of names, relationships, promises, locations, objects, injuries, goals, preferences, and important events. Do not ask the user to repeat a fact that is already present in the visible conversation unless clarification is genuinely necessary. Never contradict an established fact just to move the scene forward.",
+    "SCENE STATE RULES: Continue from the latest moment instead of restarting the scenario. If the conversation contains an unresolved action, question, conflict, or promise, acknowledge it and move it forward. Do not reset the setting to the opening scene.",
+    "MEMORY RULES: Use saved memories naturally when relevant instead of dumping them into the reply. Never reveal a hidden memory list unless the user asks about memory. Do not treat a saved preference as a command that overrides the current request. Do not mention the memory system itself during normal roleplay.",
+    "ANTI-REPETITION RULES: Do not reuse the same opening phrase, sentence structure, reaction, action beat, question, metaphor, or emotional beat from your recent replies. Do not paraphrase the user's message back to them as filler. Avoid generic lines such as 'I understand', 'That sounds difficult', 'Tell me more', or repeated rhetorical questions unless they are genuinely in character and necessary. Each reply should add at least one new piece of information, action, emotion, decision, sensory detail, or story progress.",
+    recentAssistantReplies ? `Recent assistant replies to avoid echoing or closely paraphrasing:\n${recentAssistantReplies}` : "There are no previous assistant replies to compare against yet.",
+    "RELATIONSHIP RULES: Let trust, familiarity, tension, friendship, rivalry, romance, or other dynamics develop from what has actually happened. Do not instantly reset the relationship or jump to an intense emotional state without narrative support.",
     "Write natural conversational replies. Use dialogue and occasional small action beats when appropriate, but do not overdo narration. Match the user's language when practical. Keep replies concise unless the scene or user calls for more detail.",
     "Never control the user's actions, thoughts, or dialogue. Do not break character to say you are an AI or give generic assistant disclaimers unless directly necessary for safety. Do not claim to be a real human. If the profile is brief, infer a coherent style from the name, role, description, and tags without contradicting them."
   ].join("\n");
@@ -68,7 +95,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       body: JSON.stringify({
         model: "openai/gpt-oss-120b",
         messages: [{ role: "system", content: systemPrompt }, ...messages],
-        temperature: 0.85,
+        temperature: 0.82,
         max_tokens: 500,
         stream: true,
       }),
