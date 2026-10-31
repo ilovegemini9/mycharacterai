@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect, useRef } from "react";
-import { ArrowDown, ArrowLeft, ArrowRight, Bell, Bookmark, Compass, Flame, Heart, LogIn, LogOut, Menu, MessageCircle, Plus, Search, Send, Sparkles, Stars, UserRound, WandSparkles, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Bell, Bookmark, Compass, Flame, Heart, LogIn, LogOut, Menu, MessageCircle, Plus, Search, Send, Sparkles, Stars, UserRound, WandSparkles, X } from "lucide-react";
 import { getSession, signIn, signInWithGoogle, completeOAuthRedirect, signOut, signUp, saveProfile, createCharacterRecord, listPublicCharacterRecords, listSavedCharacterIds, setCharacterSaved, getOrCreateChat, loadChatMessages, saveChatMessage, listCharacterComments, addCharacterComment, toggleCharacterLike, followCreator, reportCharacter, blockCreator, loadUserPreferences, saveUserPreferences, listCharacterMemories, addCharacterMemory, deleteCharacterMemory, type CharacterMemory, type UserPreferences, type CharacterComment, type AppSession } from "@/lib/supabase";
 type Character={id:number|string;name:string;role:string;desc:string;image:string;tags:string[];greeting:string;creator?:string;isPublic?:boolean;personality?:string;scenario?:string;backstory?:string;chatCount?:number;likeCount?:number;createdAt?:string;creatorId?:string};
 type Message={from:"user"|"bot";text:string};
