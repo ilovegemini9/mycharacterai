@@ -53,7 +53,7 @@ export async function completeOAuthRedirect(): Promise<AppSession|null> {
   const hash = new URLSearchParams(window.location.hash.replace(/^#/, ""));
   const query = new URLSearchParams(window.location.search);
   const oauthError = hash.get("error_description") || query.get("error_description") || hash.get("error") || query.get("error");
-  if (oauthError) throw new Error(decodeURIComponent(oauthError.replace(/\\+/g, " ")));
+  if (oauthError) throw new Error(decodeURIComponent(oauthError.replace(/\+/g, " ")));
   const access_token = hash.get("access_token");
   const refresh_token = hash.get("refresh_token");
   if (!access_token || !refresh_token) return null;
