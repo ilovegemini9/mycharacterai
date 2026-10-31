@@ -315,3 +315,5 @@ button,input,textarea,select{font-weight:500}
  .profile-row-copy strong{font-size:10px}
  .profile-row-copy span{font-size:8px}
 }
+
+.guest-preview-note{display:flex;align-items:center;gap:9px;margin:12px 0 0;padding:10px 13px;border:1px solid #49345d;border-radius:10px;background:linear-gradient(100deg,#241831,#191321);color:#cdb6e3;font-size:11px;line-height:1.5}.guest-preview-note svg{flex:0 0 auto;color:#c59cff}.guest-preview-note span{min-width:0}
