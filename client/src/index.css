@@ -542,3 +542,5 @@ footer a{color:#aab4d2}
   .combined-discover .try-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .combined-discover .prompt-rail{grid-template-columns:1fr}
 }
+
+.profile-safety-label{display:inline-flex;align-items:center;margin:12px 0 4px;padding:6px 9px;border:1px solid #59436c;border-radius:999px;background:#21172b;color:#d8c0ec;font-size:10px;letter-spacing:.2px}.footer-link{padding:4px 0;border:0;background:transparent;color:#a08eaf;font-size:9px}.footer-link:hover{color:#e4ccfa}.legal-modal{max-width:620px}.legal-copy{display:grid;gap:10px;padding:4px 0 18px;color:#b8a9c4;font-size:12px;line-height:1.75}.legal-copy h3{margin:0;color:#f1e8fa;font:700 14px Manrope,sans-serif}.legal-copy p{margin:0}.legal-copy p+p{padding-top:9px;border-top:1px solid #2b2034}.profile-detail-block p{white-space:pre-wrap;overflow-wrap:anywhere}
