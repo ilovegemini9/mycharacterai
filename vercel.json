@@ -6,7 +6,7 @@
   "outputDirectory": "dist/public",
   "rewrites": [
     {
-      "source": "/((?!api/|googlef743c435c0016846\\.html$).*)",
+      "source": "/((?!api/|googlef743c435c0016846.html).*)",
       "destination": "/index.html"
     }
   ]
