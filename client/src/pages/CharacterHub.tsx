@@ -19,10 +19,13 @@ function Card({c,saved,onSave,onOpen}:{c:Character;saved:boolean;onSave:()=>void
 export default function CharacterHub(){
 const [session,setSession]=useState<AppSession|null>(()=>getSession());
 const messagesEndRef=useRef<HTMLDivElement|null>(null);
+const chatLoadIdRef=useRef(0);
+const sessionUserIdRef=useRef(session?.user.id??null);
+sessionUserIdRef.current=session?.user.id??null;
 const [authOpen,setAuthOpen]=useState(false),[authMode,setAuthMode]=useState<"signin"|"signup">("signup"),[authEmail,setAuthEmail]=useState(""),[authPassword,setAuthPassword]=useState(""),[authError,setAuthError]=useState(""),[authNotice,setAuthNotice]=useState(""),[authBusy,setAuthBusy]=useState(false),[emailFormOpen,setEmailFormOpen]=useState(false);
 const [chars,setChars]=useState<Character[]>(()=>readLocal(accountStorageKey("characters",session),seed)),[category,setCategory]=useState("For you"),[selectedCategories,setSelectedCategories]=useState<string[]>(()=>{const params=new URLSearchParams(window.location.search);const ids=(params.get("categories")||"").split(",").filter(Boolean);return cats.filter(value=>ids.includes(categoryId(value)))}),[discovery,setDiscovery]=useState("Recommended"),[query,setQuery]=useState(()=>new URLSearchParams(window.location.search).get("q")||""),[active,setActive]=useState<Character|null>(null),[messages,setMessages]=useState<Message[]>([]),[draft,setDraft]=useState(""),[create,setCreate]=useState(false),[mobile,setMobile]=useState(false),[saved,setSaved]=useState<Array<number|string>>(()=>readLocal(accountStorageKey("saved",session),[])),[chats,setChats]=useState<Array<number|string>>(()=>readLocal(accountStorageKey("chats",session),[])),[view,setView]=useState("Discover"),[name,setName]=useState(""),[role,setRole]=useState(""),[desc,setDesc]=useState(""),[personality,setPersonality]=useState(""),[scenario,setScenario]=useState(""),[backstory,setBackstory]=useState(""),[greeting,setGreeting]=useState(""),[tag,setTag]=useState("Anime"),[isPublic,setIsPublic]=useState(true),[visibility,setVisibility]=useState<"public"|"private"|"unlisted">("public"),[createError,setCreateError]=useState(""),[wizardStep,setWizardStep]=useState(0),[exampleDialogue,setExampleDialogue]=useState(""),[characterRules,setCharacterRules]=useState(""),[sending,setSending]=useState(false),[chatError,setChatError]=useState(""),[comments,setComments]=useState<CharacterComment[]>([]),[commentDraft,setCommentDraft]=useState(""),[communityError,setCommunityError]=useState(""),[liked,setLiked]=useState(false),[following,setFollowing]=useState(false);
  const [preferences,setPreferences]=useState<UserPreferences>({}),[preferencesOpen,setPreferencesOpen]=useState(false),[memoryItems,setMemoryItems]=useState<CharacterMemory[]>([]),[memoryDraft,setMemoryDraft]=useState("");
-useEffect(()=>{setChars(readLocal(accountStorageKey("characters",session),seed));setSaved(readLocal(accountStorageKey("saved",session),[]));setChats(readLocal(accountStorageKey("chats",session),[]));setMessages([]);setActive(null);setView("Discover");setChatError("");},[session?.user.id]);
+useEffect(()=>{chatLoadIdRef.current+=1;setChars(readLocal(accountStorageKey("characters",session),seed));setSaved(readLocal(accountStorageKey("saved",session),[]));setChats(readLocal(accountStorageKey("chats",session),[]));setMessages([]);setActive(null);setView("Discover");setChatError("");},[session?.user.id]);
 useEffect(()=>{void completeOAuthRedirect().then(next=>{if(next)setSession(next)}).catch(err=>setAuthError(err instanceof Error?err.message:"Google sign in failed."))},[]);
 useEffect(()=>{const params=new URLSearchParams(window.location.search);if(query.trim())params.set("q",query.trim());else params.delete("q");if(selectedCategories.length)params.set("categories",selectedCategories.map(categoryId).join(","));else params.delete("categories");const search=params.toString();const next=window.location.pathname+(search?"?"+search:"")+window.location.hash;const current=window.location.pathname+window.location.search+window.location.hash;if(next!==current)window.history.replaceState(null,"",next)},[query,selectedCategories]);
 useEffect(()=>{const sync=()=>{const params=new URLSearchParams(window.location.search);setQuery(params.get("q")||"");const ids=(params.get("categories")||"").split(",").filter(Boolean);const next=cats.filter(value=>ids.includes(categoryId(value)));setSelectedCategories(next);setCategory(next[0]||"For you")};window.addEventListener("popstate",sync);return()=>window.removeEventListener("popstate",sync)},[]);
@@ -47,7 +50,30 @@ async function followActive(){if(!session||!active?.creatorId)return;try{await f
 async function reportActive(){if(!session||!active||typeof active.id!=="string")return;const reason=window.prompt("Why are you reporting this character?");if(!reason?.trim())return;try{await reportCharacter(session,active.id,reason.trim());setCommunityError("Report submitted. Thank you.");}catch(e){setCommunityError(e instanceof Error?e.message:"Could not submit report.");}}
 async function blockActive(){if(!session||!active?.creatorId)return;if(!window.confirm("Block this creator? Their characters will be hidden from your discovery."))return;try{await blockCreator(session,active.creatorId);setChars(old=>old.filter(c=>c.creatorId!==active.creatorId));setView("Discover");setActive(null);}catch(e){setCommunityError(e instanceof Error?e.message:"Could not block creator.");}}
 async function toggleSaved(id:number|string){const nextSaved=!saved.includes(id);setSaved(old=>nextSaved?[...old,id]:old.filter(i=>i!==id));if(session&&typeof id==="string"){try{await setCharacterSaved(session,id,nextSaved)}catch{setSaved(old=>nextSaved?old.filter(i=>i!==id):[...old,id])}}}
-async function open(c:Character){setActive(c);setCommunityError("");setLiked(false);setFollowing(false);setComments(typeof c.id==="string"?await listCharacterComments(c.id).catch(()=>[]):[]);setMemoryItems(session&&typeof c.id==="string"?await listCharacterMemories(session,c.id).catch(()=>[]):[]);setChats(old=>old.includes(c.id)?old:[c.id,...old]);setView("Chat");if(session&&typeof c.id==="string"){try{const chatId=await getOrCreateChat(session,c.id,c.name);const remote=await loadChatMessages(session,chatId);if(remote.length){setMessages(remote.map(m=>({from:m.sender==="character"?"bot":"user",text:m.content})));return}}catch{} }setMessages(session? [{from:"bot",text:c.greeting}] : readLocal<Message[]>(accountStorageKey("history:"+c.id,session),[{from:"bot",text:c.greeting}]));}
+async function open(c:Character){
+const requestId=++chatLoadIdRef.current;
+const accountId=session?.user.id??null;
+const isCurrent=()=>chatLoadIdRef.current===requestId&&sessionUserIdRef.current===accountId;
+setActive(c);setCommunityError("");setLiked(false);setFollowing(false);setComments([]);setMemoryItems([]);
+const nextComments=typeof c.id==="string"?await listCharacterComments(c.id).catch(()=>[]):[];
+if(!isCurrent())return;
+setComments(nextComments);
+const nextMemories=session&&typeof c.id==="string"?await listCharacterMemories(session,c.id).catch(()=>[]):[];
+if(!isCurrent())return;
+setMemoryItems(nextMemories);
+setChats(old=>old.includes(c.id)?old:[c.id,...old]);setView("Chat");
+if(session&&typeof c.id==="string"){
+try{
+const chatId=await getOrCreateChat(session,c.id,c.name);
+if(!isCurrent())return;
+const remote=await loadChatMessages(session,chatId);
+if(!isCurrent())return;
+if(remote.length){setMessages(remote.map(m=>({from:m.sender==="character"?"bot":"user",text:m.content})));return;}
+}catch{if(!isCurrent())return;}
+}
+if(!isCurrent())return;
+setMessages(session?[{from:"bot",text:c.greeting}]:readLocal<Message[]>(accountStorageKey("history:"+c.id,session),[{from:"bot",text:c.greeting}]));
+}
 async function send(text=draft){
 if(!text.trim()||!active||sending)return;
 const userText=text.trim();const prior=messages;const pending:Message[]=[...prior,{from:"user",text:userText}];
