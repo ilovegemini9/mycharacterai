@@ -251,6 +251,13 @@ button,input,textarea,select{font-weight:500}
  .profile-row{margin-top:6px;padding-top:7px}
 }
 @media(max-width:700px){
- .sidebar{overflow-y:auto}
+ .sidebar{overflow:hidden;padding:16px 13px 10px}
+ .nav-item{height:31px;font-size:12px;margin-bottom:1px}
+ .explore-label{padding-top:10px;padding-bottom:5px}
+ .category-link{height:25px}
+ .creator-promo{padding:8px 10px}
+ .creator-promo .promo-icon{display:none}
+ .creator-promo p{margin:4px 0 6px}
+ .profile-row{margin-top:6px;padding-top:7px}
  .profile-modal{max-height:88dvh;overflow-y:auto}
 }
