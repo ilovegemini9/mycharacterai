@@ -2,6 +2,8 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 
 const allowedOrigins = new Set([
   "https://character-cai.vercel.app",
+  "https://characterplay.online",
+  "https://www.characterplay.online",
 ]);
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
