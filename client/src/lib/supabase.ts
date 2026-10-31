@@ -3,7 +3,7 @@ const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefine
 const SESSION_KEY = "mycharacter:supabase-session";
 const PRODUCTION_SITE_URL = "https://character-cai.vercel.app";
 
-export type AppSession = { access_token: string; refresh_token: string; user: { id: string; email?: string } };
+export type AppSession = { access_token: string; refresh_token: string; user: { id: string; email?: string; user_metadata?: Record<string, unknown> } };
 
 export function getSession(): AppSession | null {
   try { const value = localStorage.getItem(SESSION_KEY); return value ? JSON.parse(value) as AppSession : null; } catch { return null; }
@@ -86,6 +86,16 @@ export async function signUp(email: string, password: string): Promise<{ session
 
 export async function signOut() { const session = getSession(); if (session && SUPABASE_URL && SUPABASE_KEY) await fetch(`${SUPABASE_URL}/auth/v1/logout`, { method: "POST", headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${session.access_token}` } }).catch(() => undefined); saveSession(null); }
 export async function saveProfile(session: AppSession) { if (!SUPABASE_URL || !SUPABASE_KEY) return; await fetch(`${SUPABASE_URL}/rest/v1/profiles`, { method: "POST", headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json", Prefer: "resolution=merge-duplicates,return=minimal" }, body: JSON.stringify({ id: session.user.id, username: session.user.email?.split("@")[0] || null, updated_at: new Date().toISOString() }) }); }
+
+export async function updateAccountProfile(session: AppSession, displayName: string, avatarUrl: string): Promise<AppSession> {
+  if (!SUPABASE_URL || !SUPABASE_KEY) throw new Error("Account service is not configured yet.");
+  const response = await fetch(`${SUPABASE_URL}/auth/v1/user`, { method: "PUT", headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" }, body: JSON.stringify({ data: { ...(session.user.user_metadata || {}), display_name: displayName, avatar_url: avatarUrl } }) });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok || !data?.id) throw new Error(data?.msg || data?.message || "Could not update your profile.");
+  const next: AppSession = { ...session, user: { ...session.user, ...data, user_metadata: data.user_metadata || { ...(session.user.user_metadata || {}), display_name: displayName, avatar_url: avatarUrl } } };
+  saveSession(next);
+  return next;
+}
 
 export type CharacterRecord = { id: string; creator_id: string | null; name: string; role: string; description: string; greeting: string; personality: string | null; scenario: string | null; backstory: string | null; image_url: string; tags: string[]; is_public: boolean; visibility?: "public"|"private"|"unlisted"; chat_count?: number; like_count?: number; creator_username?: string | null; creator_display_name?: string | null; created_at?: string };
 export type ChatMessage = { id?: string; sender: "user" | "character"; content: string; created_at?: string };
