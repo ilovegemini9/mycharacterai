@@ -1,6 +1,7 @@
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string | undefined;
 const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
 const SESSION_KEY = "mycharacter:supabase-session";
+const PRODUCTION_SITE_URL = "https://character-cai.vercel.app";
 
 export type AppSession = { access_token: string; refresh_token: string; user: { id: string; email?: string } };
 
@@ -25,12 +26,25 @@ async function authRequest(path: string, body: Record<string, unknown>) {
   return data;
 }
 
+/**
+ * Use the canonical production URL on the production domain. This avoids
+ * accidentally sending a production OAuth flow back to localhost when the
+ * Supabase project's fallback Site URL is misconfigured. Local development
+ * continues to return to its own origin.
+ */
+function getOAuthRedirectUrl(): string {
+  const isLocalDevelopment = ["localhost", "127.0.0.1"].includes(window.location.hostname);
+  const isProductionDomain = window.location.hostname === "character-cai.vercel.app";
+  const base = isProductionDomain ? PRODUCTION_SITE_URL : window.location.origin;
+  const path = isLocalDevelopment ? window.location.pathname : (window.location.pathname || "/");
+  return new URL(path, base).toString();
+}
+
 export function signInWithGoogle(): void {
   if (!SUPABASE_URL || !SUPABASE_KEY) throw new Error("Account service is not configured yet.");
-  const redirectTo = `${window.location.origin}${window.location.pathname}`;
   const url = new URL(`${SUPABASE_URL}/auth/v1/authorize`);
   url.searchParams.set("provider", "google");
-  url.searchParams.set("redirect_to", redirectTo);
+  url.searchParams.set("redirect_to", getOAuthRedirectUrl());
   window.location.assign(url.toString());
 }
 
@@ -39,7 +53,7 @@ export async function completeOAuthRedirect(): Promise<AppSession|null> {
   const hash = new URLSearchParams(window.location.hash.replace(/^#/, ""));
   const query = new URLSearchParams(window.location.search);
   const oauthError = hash.get("error_description") || query.get("error_description") || hash.get("error") || query.get("error");
-  if (oauthError) throw new Error(decodeURIComponent(oauthError.replace(/\+/g, " ")));
+  if (oauthError) throw new Error(decodeURIComponent(oauthError.replace(/\\+/g, " ")));
   const access_token = hash.get("access_token");
   const refresh_token = hash.get("refresh_token");
   if (!access_token || !refresh_token) return null;
