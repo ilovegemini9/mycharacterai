@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://characterplay.online/</loc>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
+  <url><loc>https://characterplay.online/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>
+  <url><loc>https://characterplay.online/character/starter-akira</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://characterplay.online/character/starter-yuna</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://characterplay.online/character/starter-ren</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://characterplay.online/character/starter-kaede</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://characterplay.online/character/starter-haru</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://characterplay.online/character/starter-sora</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://characterplay.online/character/starter-mika</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://characterplay.online/character/starter-daichi</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
 </urlset>
