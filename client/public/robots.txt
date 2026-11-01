@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://character-cai.vercel.app/sitemap.xml
+Sitemap: https://characterplay.online/sitemap.xml
