@@ -6,7 +6,6 @@ import { renderCharacterPage } from "./character-html.mjs";
 const SITE_URL = "https://characterplay.online";
 const SOURCE_FILE = path.resolve("client/src/pages/CharacterHub.tsx");
 const OUTPUT_DIR = path.resolve("dist/public");
-const PAGE_SIZE = 1000;
 
 function readLiteral(node) {
   if (ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node)) return node.text;
@@ -41,48 +40,9 @@ async function readStarterCharacters() {
   return value;
 }
 
-function toPublicCharacter(record) {
-  return {
-    id: record.id,
-    name: record.name,
-    role: record.role || "AI character",
-    desc: record.description || "",
-    image: record.image_url || "",
-    tags: Array.isArray(record.tags) ? record.tags : [],
-    greeting: record.greeting || ""
-  };
-}
-
-async function fetchPublicCharacters() {
-  const supabaseUrl = process.env.VITE_SUPABASE_URL;
-  const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
-  if (!supabaseUrl || !supabaseKey) {
-    console.warn("Prerender: Supabase env vars missing; generating starter character pages only.");
-    return [];
-  }
-  const records = [];
-  for (let offset = 0; ; offset += PAGE_SIZE) {
-    const url = new URL("/rest/v1/character_discovery", supabaseUrl);
-    url.searchParams.set("select", "id,name,role,description,greeting,image_url,tags,is_public,visibility");
-    url.searchParams.set("is_public", "eq.true");
-    url.searchParams.set("visibility", "eq.public");
-    url.searchParams.set("order", "created_at.desc");
-    url.searchParams.set("limit", String(PAGE_SIZE));
-    url.searchParams.set("offset", String(offset));
-    const response = await fetch(url, { headers: { apikey: supabaseKey, Authorization: "Bearer " + supabaseKey } });
-    if (!response.ok) throw new Error("Public character fetch failed with HTTP " + response.status);
-    const page = await response.json();
-    if (!Array.isArray(page)) throw new Error("Supabase returned an invalid public character list.");
-    records.push(...page.filter((item) => item && typeof item.id === "string" && item.is_public === true && item.visibility === "public").map(toPublicCharacter));
-    if (page.length < PAGE_SIZE) break;
-  }
-  return records;
-}
-
 const template = await fs.readFile(path.join(OUTPUT_DIR, "index.html"), "utf8");
 const starters = await readStarterCharacters();
-const publicRecords = await fetchPublicCharacters();
-const characters = Array.from(new Map([...starters, ...publicRecords].map((item) => [String(item.id), item])).values());
+const characters = starters;
 let generated = 0;
 for (const character of characters) {
   if (!character || typeof character.id !== "string" || !/^[a-zA-Z0-9_-]+$/.test(character.id)) continue;
