@@ -743,3 +743,71 @@ footer a{color:#aab4d2}
   .combined-discover .featured-rail { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .combined-discover .character-rail .card-image-button { height: 220px; }
 }
+
+
+/* Desktop visual redesign: spacious editorial layout, larger portraits and clear type */
+@media (min-width: 1001px) {
+  .site-shell { min-height: 100vh; }
+  .sidebar { width: 270px; padding: 24px 18px; }
+  .main-content { margin-left: 270px; padding: 0 clamp(36px, 4vw, 76px); }
+  .topbar { height: 82px; }
+  .top-search { max-width: 760px; height: 50px; }
+  .top-search input { font-size: 16px; }
+  .auth-text-btn, .auth-create-btn { min-height: 46px; font-size: 15px; padding-inline: 24px; }
+  .discover, .listing, .combined-discover { max-width: 1760px; }
+  .combined-discover .discovery-welcome { min-height: 340px; padding: 58px 64px; margin: 24px 0 48px; }
+  .combined-discover .discovery-welcome-copy h1 { font-size: clamp(48px, 4vw, 68px); max-width: 760px; }
+  .combined-discover .discovery-welcome-copy > p { font-size: 18px; max-width: 680px; }
+  .combined-discover .discovery-search { max-width: 650px; min-height: 64px; }
+  .combined-discover .discovery-search input { font-size: 17px; }
+  .combined-discover .discovery-welcome-art { flex-basis: 270px; width: 270px; height: 270px; }
+  .combined-discover .discovery-shelf { margin: 48px 0 58px; }
+  .combined-discover .shelf-heading { margin-bottom: 24px; }
+  .combined-discover .shelf-heading h2 { font-size: 32px; }
+  .combined-discover .shelf-heading p { font-size: 16px; }
+  .combined-discover .shelf-heading .eyebrow { font-size: 12px; }
+  .combined-discover .character-rail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px;
+  }
+  .combined-discover .character-rail .character-card { border-radius: 20px; overflow: hidden; }
+  .combined-discover .character-rail .card-image-button { height: clamp(290px, 24vw, 390px); }
+  .combined-discover .character-rail .card-body { padding: 22px 24px 24px; }
+  .combined-discover .character-rail .card-title-row h3,
+  .combined-discover .character-rail .card-body h3 { font-size: 22px; line-height: 1.25; }
+  .combined-discover .character-rail .role { font-size: 15px; }
+  .combined-discover .character-rail .card-body > p { font-size: 16px; line-height: 1.75; margin-top: 13px; }
+  .combined-discover .character-rail .card-meta { font-size: 13px; }
+  .combined-discover .character-rail .card-greeting { font-size: 15px !important; line-height: 1.7; }
+  .combined-discover .character-rail .tags { gap: 8px; }
+  .combined-discover .character-rail .tags span { font-size: 12px; padding: 8px 11px; }
+  .combined-discover .character-rail .card-arrow { width: 44px; height: 44px; }
+  .combined-discover .featured-rail { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+  .combined-discover .featured-tile { padding: 22px; gap: 20px; border-radius: 18px; }
+  .combined-discover .featured-tile img { width: 112px; height: 112px; flex-basis: 112px; }
+  .combined-discover .featured-tile strong { font-size: 18px; }
+  .combined-discover .featured-tile small { font-size: 14px; }
+  .combined-discover .featured-tile em { font-size: 13px; }
+  .combined-discover .try-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+  .combined-discover .try-tile { min-height: 160px; padding: 26px; border-radius: 18px; }
+  .combined-discover .try-tile strong { font-size: 21px; }
+  .combined-discover .try-tile span { font-size: 16px; }
+  .combined-discover .category-tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+  .combined-discover .category-tile { min-height: 60px; padding: 18px; font-size: 15px; }
+  .combined-discover .prompt-chips { gap: 14px; }
+  .combined-discover .prompt-chips button { padding: 15px 21px; font-size: 15px; }
+  .sidebar .brand { font-size: 26px; padding-bottom: 38px; }
+  .sidebar .nav-item { min-height: 48px; font-size: 15px; }
+  .sidebar .side-label { font-size: 11px; }
+  .sidebar .category-link { min-height: 40px; font-size: 14px; }
+}
+@media (min-width: 1700px) {
+  .combined-discover .character-rail { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .combined-discover .featured-rail { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .combined-discover .try-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (min-width: 1001px) and (max-width: 1250px) {
+  .main-content { padding-inline: 28px; }
+  .combined-discover .character-rail { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+  .combined-discover .character-rail .card-image-button { height: 260px; }
+}
