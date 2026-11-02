@@ -970,3 +970,186 @@ footer a{color:#aab4d2}
     height: 290px;
   }
 }
+
+
+/* Final desktop scale pass: make discovery cards and controls comfortably readable */
+@media (min-width: 1001px) {
+  .main-content {
+    padding-left: clamp(38px, 4vw, 82px);
+    padding-right: clamp(38px, 4vw, 82px);
+  }
+
+  .combined-discover {
+    max-width: 1900px;
+  }
+
+  .combined-discover .for-you-heading {
+    margin-top: 48px;
+    margin-bottom: 34px;
+  }
+
+  .combined-discover .for-you-heading h2 {
+    font-size: clamp(40px, 3vw, 52px);
+  }
+
+  .combined-discover .for-you-heading .eyebrow {
+    font-size: 15px;
+    letter-spacing: 2px;
+  }
+
+  .combined-discover .results-count,
+  .combined-discover .section-heading p {
+    font-size: 18px;
+  }
+
+  .combined-discover .compact-discovery-search {
+    min-height: 68px;
+    width: min(44%, 680px);
+    padding-inline: 22px;
+  }
+
+  .combined-discover .compact-discovery-search input {
+    font-size: 19px;
+  }
+
+  .combined-discover > .tabs {
+    gap: 14px;
+    padding-bottom: 28px;
+  }
+
+  .combined-discover > .tabs button {
+    min-height: 54px;
+    padding-inline: 23px;
+    font-size: 16px;
+    border-radius: 11px;
+  }
+
+  .combined-discover .character-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 34px;
+  }
+
+  .combined-discover .character-grid > .character-card {
+    border-radius: 22px;
+  }
+
+  .combined-discover .character-grid .card-image-button {
+    height: clamp(370px, 30vw, 500px);
+  }
+
+  .combined-discover .character-grid .card-badge {
+    top: 19px;
+    left: 19px;
+    padding: 9px 13px;
+    font-size: 12px;
+  }
+
+  .combined-discover .character-grid .card-body {
+    padding: 30px 32px 32px;
+  }
+
+  .combined-discover .character-grid .card-title-row h3 {
+    font-size: clamp(28px, 2vw, 34px);
+    line-height: 1.2;
+  }
+
+  .combined-discover .character-grid .role {
+    font-size: 18px;
+  }
+
+  .combined-discover .character-grid .heart {
+    width: 46px;
+    height: 46px;
+    flex-basis: 46px;
+  }
+
+  .combined-discover .character-grid .card-body > p {
+    font-size: 19px;
+    line-height: 1.75;
+    margin: 17px 0 22px;
+    -webkit-line-clamp: 3;
+  }
+
+  .combined-discover .character-grid .card-meta {
+    gap: 18px;
+    font-size: 15px;
+  }
+
+  .combined-discover .character-grid .card-meta svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .combined-discover .character-grid .card-greeting {
+    font-size: 17px !important;
+    line-height: 1.75;
+    margin-top: 17px;
+  }
+
+  .combined-discover .character-grid .tags {
+    gap: 10px;
+  }
+
+  .combined-discover .character-grid .tags span {
+    padding: 9px 13px;
+    font-size: 13px;
+  }
+
+  .combined-discover .character-grid .card-arrow {
+    width: 48px;
+    height: 48px;
+    flex-basis: 48px;
+  }
+
+  .combined-discover .create-banner {
+    margin: 62px 0 44px;
+    padding: 36px 40px;
+  }
+
+  .combined-discover .create-banner h2 {
+    font-size: 26px;
+  }
+
+  .combined-discover .create-banner p {
+    font-size: 17px;
+  }
+
+  .combined-discover footer {
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 1800px) {
+  .combined-discover .character-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 30px;
+  }
+
+  .combined-discover .character-grid .card-image-button {
+    height: clamp(340px, 22vw, 440px);
+  }
+
+  .combined-discover .character-grid .card-title-row h3 {
+    font-size: 29px;
+  }
+
+  .combined-discover .character-grid .card-body {
+    padding: 26px 28px 28px;
+  }
+
+  .combined-discover .character-grid .card-body > p {
+    font-size: 17px;
+  }
+}
+
+@media (min-width: 1001px) and (max-width: 1250px) {
+  .combined-discover .character-grid .card-image-button {
+    height: 340px;
+  }
+  .combined-discover .character-grid .card-body {
+    padding: 24px;
+  }
+  .combined-discover .character-grid .card-title-row h3 {
+    font-size: 27px;
+  }
+}
