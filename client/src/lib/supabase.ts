@@ -1,7 +1,7 @@
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string | undefined;
 const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
 const SESSION_KEY = "mycharacter:supabase-session";
-const PRODUCTION_SITE_URL = "https://character-cai.vercel.app";
+const PRODUCTION_SITE_URL = "https://characterplay.online";
 
 export type AppSession = { access_token: string; refresh_token: string; user: { id: string; email?: string; user_metadata?: Record<string, unknown> } };
 
@@ -34,7 +34,7 @@ async function authRequest(path: string, body: Record<string, unknown>) {
  */
 function getOAuthRedirectUrl(): string {
   const isLocalDevelopment = ["localhost", "127.0.0.1"].includes(window.location.hostname);
-  const isProductionDomain = window.location.hostname === "character-cai.vercel.app";
+  const isProductionDomain = ["character-cai.vercel.app", "characterplay.online"].includes(window.location.hostname);
   const base = isProductionDomain ? PRODUCTION_SITE_URL : window.location.origin;
   const path = isLocalDevelopment ? window.location.pathname : (window.location.pathname || "/");
   return new URL(path, base).toString();
