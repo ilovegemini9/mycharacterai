@@ -41,6 +41,18 @@ async function readStarterCharacters() {
   return value;
 }
 
+function toPublicCharacter(record) {
+  return {
+    id: record.id,
+    name: record.name,
+    role: record.role || "AI character",
+    desc: record.description || "",
+    image: record.image_url || "",
+    tags: Array.isArray(record.tags) ? record.tags : [],
+    greeting: record.greeting || ""
+  };
+}
+
 async function fetchPublicCharacters() {
   const supabaseUrl = process.env.VITE_SUPABASE_URL;
   const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
