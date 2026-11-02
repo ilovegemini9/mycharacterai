@@ -39,8 +39,8 @@ const [chars,setChars]=useState<Character[]>(()=>{const stored=readLocal<Charact
  useEffect(()=>{
   const isPublicProfile=!!active&&active.isPublic!==false&&(view==="Profile"||window.location.pathname==="/character/"+encodeURIComponent(String(active.id)));
   const isDiscover=view==="Discover"&&!query.trim()&&!selectedCategories.length;
-  const title=isPublicProfile?active!.name+" | AI Character Profile | mycharacter":"Free AI Character Chat & Roleplay | mycharacter";
-  const description=isPublicProfile?("Meet "+active!.name+": "+active!.role+". "+active!.desc).replace(/\\s+/g," ").slice(0,155):"Discover AI characters, chat through stories and roleplay, or create your own character for free.";
+  const title=isPublicProfile?active!.name+" | AI Character Profile | mycharacter":"AI Character Chat, Stories & Roleplay | mycharacter";
+  const description=isPublicProfile?("Meet "+active!.name+": "+active!.role+". "+active!.desc).replace(/\\s+/g," ").slice(0,155):"Discover original AI characters for immersive chat, interactive stories, and roleplay. Meet characters, explore their worlds, and create your own on mycharacter.";
   const canonical=isPublicProfile?"https://characterplay.online/character/"+encodeURIComponent(String(active!.id)):"https://characterplay.online/";
   const shouldIndex=isPublicProfile||isDiscover;
   document.title=title;
