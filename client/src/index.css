@@ -698,3 +698,48 @@ footer a{color:#aab4d2}
   .sidebar > .nav-item { height: 43px; min-height: 43px; font-size: 14px; }
   .sidebar > .category-link { height: 35px; min-height: 35px; font-size: 13px; }
 }
+
+
+/* Second desktop readability pass: give every discovery card more room */
+@media (min-width: 1001px) {
+  body { font-size: 16px; }
+  .main-content { padding-left: clamp(32px, 3.2vw, 64px); padding-right: clamp(32px, 3.2vw, 64px); }
+  .discover, .listing, .combined-discover { max-width: 1600px; }
+  .section-heading { margin-top: 48px; margin-bottom: 22px; }
+  .section-heading h2, .listing h1 { font-size: 32px; }
+  .section-heading p, .section-subtitle { font-size: 15px; }
+  .combined-discover .character-rail {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+  }
+  .combined-discover .character-rail .card-image-button { height: 245px; }
+  .combined-discover .character-rail .card-body { padding: 18px; }
+  .combined-discover .character-rail .card-body h3,
+  .combined-discover .character-rail .card-title-row h3 { font-size: 18px; }
+  .combined-discover .character-rail .role { font-size: 13px; }
+  .combined-discover .character-rail .card-body p { font-size: 14px; line-height: 1.7; }
+  .combined-discover .character-rail .card-meta { font-size: 12px; }
+  .combined-discover .character-rail .card-greeting { font-size: 13px !important; }
+  .combined-discover .character-rail .tags span { font-size: 11px; padding: 7px 9px; }
+  .combined-discover .featured-rail { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+  .combined-discover .featured-tile { padding: 17px; gap: 16px; }
+  .combined-discover .featured-tile img { width: 96px; height: 96px; flex-basis: 96px; }
+  .combined-discover .featured-tile strong { font-size: 16px; }
+  .combined-discover .featured-tile small { font-size: 13px; }
+  .combined-discover .featured-tile em { font-size: 12px; }
+  .try-tiles { gap: 16px; }
+  .try-tile { min-height: 150px; padding: 22px; }
+  .try-tile strong { font-size: 18px; }
+  .try-tile span { font-size: 14px; }
+  .prompt-chips { gap: 12px; }
+  .prompt-chips button { padding: 13px 18px; font-size: 14px; }
+}
+@media (min-width: 1600px) {
+  .combined-discover .character-rail { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .combined-discover .featured-rail { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@media (min-width: 1001px) and (max-width: 1250px) {
+  .combined-discover .character-rail { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .combined-discover .featured-rail { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .combined-discover .character-rail .card-image-button { height: 220px; }
+}
