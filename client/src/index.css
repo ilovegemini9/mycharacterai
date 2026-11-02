@@ -577,3 +577,53 @@ footer a{color:#aab4d2}
 .discovery-recent{margin-bottom:34px}
 @media(max-width:900px){.try-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.category-tiles{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:560px){.scene-empty{align-items:flex-start;flex-wrap:wrap}.scene-empty section{min-width:calc(100% - 70px)}.scene-empty>.secondary-btn{margin-left:64px}.category-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.try-tile{min-height:108px;padding:14px}.discovery-shelf{margin:28px 0 34px}}
+
+
+/* Mobile layout repair and Character.AI-style creator flow */
+@media (max-width: 700px) {
+  html, body, #root { width: 100%; min-width: 0; overflow-x: clip; }
+  .site-shell { width: 100%; min-width: 0; overflow-x: clip; }
+  .main-content { width: 100%; min-width: 0; margin-left: 0; padding-left: 12px; padding-right: 12px; }
+  .topbar { position: sticky; top: 0; z-index: 20; width: 100%; min-width: 0; gap: 7px; }
+  .top-search { min-width: 0; flex: 1 1 auto; }
+  .topbar > * { flex-shrink: 0; }
+  .character-grid, .combined-discover .character-rail { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+  .character-card { min-width: 0; }
+  .card-body { padding: 10px !important; }
+  .card-title-row { gap: 6px; }
+  .card-title-row h3 { overflow-wrap: anywhere; }
+  .card-meta { flex-wrap: wrap; gap: 6px; }
+  .tags { flex-wrap: wrap; }
+  .modal-backdrop { align-items: flex-end; padding: 0; overflow-y: auto; }
+  .modal { width: 100%; max-width: 100%; max-height: min(94dvh, 900px); margin: 0; padding: 20px 16px max(18px, env(safe-area-inset-bottom)); border-radius: 22px 22px 0 0; overflow-y: auto; overscroll-behavior: contain; }
+  .modal-head { position: relative; padding-right: 30px; }
+  .modal-head h2 { font-size: 25px; line-height: 1.15; }
+  .modal form { min-width: 0; }
+  .modal label { display: grid; gap: 8px; width: 100%; min-width: 0; font-size: 14px; }
+  .modal input, .modal textarea, .modal select { width: 100%; min-width: 0; max-width: 100%; box-sizing: border-box; font-size: 16px; }
+  .modal textarea { min-height: 105px; }
+  .wizard-progress { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 4px; width: 100%; overflow: visible; }
+  .wizard-progress button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; min-width: 0; padding: 8px 2px; font-size: 10px; line-height: 1.15; text-align: center; white-space: normal; }
+  .wizard-progress button span { flex: 0 0 24px; width: 24px; height: 24px; display: grid; place-items: center; }
+  .avatar-preview { display: flex; align-items: center; gap: 14px; min-width: 0; padding: 12px; }
+  .avatar-preview img { width: 88px; height: 88px; flex: 0 0 88px; }
+  .avatar-preview span { min-width: 0; font-size: 12px; line-height: 1.45; }
+  .modal-actions { position: sticky; bottom: calc(-1 * max(18px, env(safe-area-inset-bottom))); display: flex; gap: 9px; padding: 13px 0 max(8px, env(safe-area-inset-bottom)); margin-top: 12px; background: #111522; }
+  .modal-actions button { flex: 1 1 0; min-width: 0; justify-content: center; }
+  .chat-layout, .profile-hero, .character-preview { grid-template-columns: minmax(0,1fr) !important; }
+  .chat-details { display: none; }
+  .chat-main, .chat-page, .listing, .discover { min-width: 0; width: 100%; }
+}
+@media (max-width: 380px) {
+  .character-grid, .combined-discover .character-rail { grid-template-columns: minmax(0,1fr); }
+  .wizard-progress button { font-size: 9px; }
+  .modal { padding-left: 13px; padding-right: 13px; }
+}
+/* Cleaner creator identity card */
+.modal .wizard-progress { margin: 20px 0 22px; }
+.modal .avatar-preview { border: 1px solid #30364b; border-radius: 14px; background: #171d2d; }
+.modal .avatar-preview img { display: block; object-fit: contain; border-radius: 12px; background: #28213a; }
+.modal .character-preview { display: flex; align-items: center; gap: 15px; padding: 15px; border: 1px solid #30364b; border-radius: 16px; background: #171d2d; }
+.modal .character-preview img { width: 86px; height: 86px; flex: 0 0 86px; object-fit: contain; border-radius: 14px; background: #29213b; }
+.modal .character-preview h3 { margin: 0 0 5px; color: #fff; }
+.modal .character-preview p { margin: 7px 0 0; color: #bac3d8; line-height: 1.5; }
