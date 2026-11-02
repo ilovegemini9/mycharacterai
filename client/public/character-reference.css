@@ -82,3 +82,55 @@
   footer b { font-size:11px !important; }
   footer a { font-size:9px !important; }
 }
+
+
+/* One-page character creator */
+.creator-backdrop { align-items:flex-start !important; overflow-y:auto !important; padding:24px 14px !important; }
+.creator-modal { width:min(900px,100%) !important; max-width:900px !important; max-height:none !important; margin:auto !important; overflow:visible !important; }
+.creator-modal-head { padding-bottom:18px !important; }
+.creator-modal-head h2 { font-size:25px !important; margin:7px 0 4px !important; }
+.creator-form { padding:0 24px 22px !important; }
+.creator-form-layout { display:grid !important; grid-template-columns:minmax(0,1fr) 235px !important; gap:24px !important; align-items:start !important; }
+.creator-form-main { min-width:0 !important; display:flex !important; flex-direction:column !important; gap:15px !important; }
+.creator-form-main label { position:relative !important; display:flex !important; flex-direction:column !important; gap:7px !important; font-size:13px !important; font-weight:600 !important; }
+.creator-form-main input:not([type=checkbox]),.creator-form-main textarea,.creator-form-main select { width:100% !important; box-sizing:border-box !important; border:1px solid #39393f !important; border-radius:9px !important; background:#202024 !important; color:#f5f5f6 !important; padding:11px 12px !important; font-size:13px !important; outline:none !important; }
+.creator-form-main textarea { resize:vertical !important; line-height:1.5 !important; }
+.creator-form-main input:focus,.creator-form-main textarea:focus,.creator-form-main select:focus { border-color:#8d75d8 !important; }
+.creator-form-main label small { color:#888890 !important; font-size:10px !important; font-weight:400 !important; }
+.creator-form-main .creator-counter { text-align:right !important; margin-top:-3px !important; }
+.creator-switch-row { display:flex !important; justify-content:space-between !important; align-items:center !important; gap:16px !important; padding:12px 13px !important; border:1px solid #36363c !important; border-radius:9px !important; background:#202024 !important; }
+.creator-switch-row div { display:flex !important; flex-direction:column !important; gap:4px !important; }
+.creator-switch-row strong { font-size:12px !important; }
+.creator-switch-row span { color:#9999a1 !important; font-size:11px !important; }
+.creator-switch-row input[type=checkbox] { width:17px !important; height:17px !important; accent-color:#9a83ed !important; flex:0 0 auto !important; }
+.creator-advanced { border:1px solid #36363c !important; border-radius:9px !important; background:#202024 !important; padding:12px !important; }
+.creator-advanced summary { cursor:pointer !important; display:flex !important; align-items:center !important; gap:9px !important; font-size:13px !important; font-weight:600 !important; }
+.creator-advanced summary span { color:#9999a1 !important; font-size:11px !important; font-weight:400 !important; }
+.creator-advanced summary em { margin-left:auto !important; color:#b7a4ff !important; font-size:9px !important; font-style:normal !important; text-transform:uppercase !important; }
+.creator-advanced label { margin-top:14px !important; }
+.creator-form-aside { position:sticky !important; top:15px !important; }
+.creator-live-preview { padding:17px !important; border:1px solid #37373d !important; border-radius:13px !important; background:#202024 !important; text-align:center !important; }
+.creator-preview-label { display:block !important; color:#a9a9b0 !important; font-size:9px !important; letter-spacing:1.2px !important; font-weight:700 !important; text-align:left !important; }
+.creator-live-preview img { width:105px !important; height:105px !important; object-fit:cover !important; border-radius:50% !important; margin:18px auto 10px !important; background:#383044 !important; }
+.creator-live-preview h3 { font-size:16px !important; margin:0 0 4px !important; }
+.creator-live-preview p { color:#a5a5ad !important; font-size:11px !important; line-height:1.4 !important; margin:0 0 10px !important; }
+.creator-live-preview div { display:inline-flex !important; border-radius:20px !important; background:#34313d !important; color:#c7baff !important; padding:4px 9px !important; font-size:10px !important; }
+.creator-aside-note { display:flex !important; gap:9px !important; align-items:flex-start !important; padding:13px 3px !important; color:#a5a5ad !important; font-size:11px !important; line-height:1.5 !important; }
+.creator-aside-note svg { color:#b7a4ff !important; flex:0 0 auto !important; }
+.creator-form-actions { position:sticky !important; bottom:0 !important; z-index:4 !important; margin:18px -24px -22px !important; padding:14px 24px !important; background:#1b1b1f !important; border-top:1px solid #36363c !important; }
+@media(max-width:700px) {
+ .creator-backdrop { padding:0 !important; align-items:stretch !important; }
+ .creator-modal { width:100% !important; max-width:none !important; min-height:100dvh !important; border-radius:0 !important; margin:0 !important; }
+ .creator-modal-head { padding:20px 17px 14px !important; }
+ .creator-form { padding:0 17px 18px !important; }
+ .creator-form-layout { grid-template-columns:minmax(0,1fr) !important; gap:12px !important; }
+ .creator-form-aside { position:static !important; grid-row:1 !important; }
+ .creator-live-preview { display:grid !important; grid-template-columns:58px minmax(0,1fr) !important; grid-template-rows:auto auto auto !important; column-gap:12px !important; text-align:left !important; padding:10px !important; }
+ .creator-preview-label { grid-column:1/-1 !important; }
+ .creator-live-preview img { grid-column:1 !important; grid-row:2/5 !important; width:58px !important; height:58px !important; margin:8px 0 0 !important; }
+ .creator-live-preview h3 { align-self:end !important; font-size:13px !important; }
+ .creator-live-preview p { margin:0 !important; }
+ .creator-live-preview div { justify-self:start !important; margin-top:4px !important; }
+ .creator-aside-note { display:none !important; }
+ .creator-form-actions { margin:16px -17px -18px !important; padding:12px 17px !important; }
+}
