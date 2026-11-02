@@ -811,3 +811,162 @@ footer a{color:#aab4d2}
   .combined-discover .character-rail { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
   .combined-discover .character-rail .card-image-button { height: 260px; }
 }
+
+
+/* Correct desktop discovery sizing: the live JSX renders .character-grid, not .character-rail */
+@media (min-width: 1001px) {
+  .combined-discover {
+    width: 100%;
+    max-width: 1760px;
+    margin-inline: auto;
+  }
+  .combined-discover .for-you-heading {
+    align-items: center;
+    gap: 28px;
+    margin: 38px 0 28px;
+  }
+  .combined-discover .for-you-heading h2 {
+    font-size: clamp(34px, 2.4vw, 44px);
+    line-height: 1.15;
+    letter-spacing: -1.2px;
+  }
+  .combined-discover .for-you-heading .eyebrow {
+    font-size: 13px;
+  }
+  .combined-discover .results-count,
+  .combined-discover .section-heading p {
+    font-size: 16px;
+  }
+  .combined-discover .compact-discovery-search {
+    width: min(42%, 560px);
+    min-height: 58px;
+    padding-inline: 18px;
+  }
+  .combined-discover .compact-discovery-search input {
+    font-size: 17px;
+  }
+  .combined-discover > .tabs {
+    gap: 12px;
+    padding-bottom: 22px;
+  }
+  .combined-discover > .tabs button {
+    min-height: 46px;
+    height: auto;
+    padding: 0 19px;
+    font-size: 14px;
+  }
+  .combined-discover .character-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px;
+    align-items: stretch;
+  }
+  .combined-discover .character-grid > .character-card {
+    border-radius: 20px;
+    min-width: 0;
+  }
+  .combined-discover .character-grid .card-image-button {
+    height: clamp(300px, 25vw, 410px);
+  }
+  .combined-discover .character-grid .card-badge {
+    top: 16px;
+    left: 16px;
+    padding: 8px 11px;
+    font-size: 11px;
+  }
+  .combined-discover .character-grid .card-body {
+    padding: 24px 26px 26px;
+  }
+  .combined-discover .character-grid .card-title-row {
+    gap: 16px;
+  }
+  .combined-discover .character-grid .card-title-row h3 {
+    font-size: 25px;
+    line-height: 1.25;
+  }
+  .combined-discover .character-grid .role {
+    font-size: 16px;
+  }
+  .combined-discover .character-grid .heart {
+    width: 40px;
+    height: 40px;
+    flex-basis: 40px;
+  }
+  .combined-discover .character-grid .card-body > p {
+    font-size: 17px;
+    line-height: 1.75;
+    min-height: 0;
+    margin: 14px 0 18px;
+    -webkit-line-clamp: 3;
+  }
+  .combined-discover .character-grid .card-meta {
+    gap: 14px;
+    font-size: 13px;
+  }
+  .combined-discover .character-grid .card-greeting {
+    font-size: 15px !important;
+    line-height: 1.7;
+  }
+  .combined-discover .character-grid .tags {
+    gap: 9px;
+  }
+  .combined-discover .character-grid .tags span {
+    padding: 8px 11px;
+    font-size: 12px;
+  }
+  .combined-discover .character-grid .card-arrow {
+    width: 44px;
+    height: 44px;
+    flex-basis: 44px;
+  }
+  .combined-discover .create-banner {
+    margin: 52px 0 38px;
+    padding: 30px 34px;
+  }
+  .combined-discover .create-banner h2 {
+    font-size: 22px;
+  }
+  .combined-discover .create-banner p {
+    font-size: 15px;
+  }
+  .combined-discover footer {
+    font-size: 13px;
+    padding: 26px 0 30px;
+  }
+  .sidebar > .nav-item {
+    height: 48px;
+    min-height: 48px;
+    font-size: 15px;
+  }
+  .sidebar > .category-link {
+    height: 40px;
+    min-height: 40px;
+    font-size: 14px;
+  }
+}
+@media (min-width: 1700px) {
+  .combined-discover .character-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 26px;
+  }
+  .combined-discover .character-grid .card-image-button {
+    height: clamp(300px, 20vw, 380px);
+  }
+}
+@media (min-width: 1001px) and (max-width: 1250px) {
+  .combined-discover .for-you-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .combined-discover .compact-discovery-search {
+    width: 100%;
+    max-width: 620px;
+  }
+  .combined-discover .character-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+  .combined-discover .character-grid .card-image-button {
+    height: 290px;
+  }
+}
