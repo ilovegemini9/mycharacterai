@@ -3,7 +3,6 @@ import path from "node:path";
 import ts from "typescript";
 import { renderCharacterPage } from "./character-html.mjs";
 
-const SITE_URL = "https://characterplay.online";
 const SOURCE_FILE = path.resolve("client/src/pages/CharacterHub.tsx");
 const OUTPUT_DIR = path.resolve("dist/public");
 
@@ -41,8 +40,7 @@ async function readStarterCharacters() {
 }
 
 const template = await fs.readFile(path.join(OUTPUT_DIR, "index.html"), "utf8");
-const starters = await readStarterCharacters();
-const characters = starters;
+const characters = await readStarterCharacters();
 let generated = 0;
 for (const character of characters) {
   if (!character || typeof character.id !== "string" || !/^[a-zA-Z0-9_-]+$/.test(character.id)) continue;
