@@ -692,3 +692,9 @@ footer a{color:#aab4d2}
 @media (min-width: 1500px) {
   .character-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 }
+
+/* Keep the desktop sidebar controls readable after compact-height rules */
+@media (min-width: 701px) {
+  .sidebar > .nav-item { height: 43px; min-height: 43px; font-size: 14px; }
+  .sidebar > .category-link { height: 35px; min-height: 35px; font-size: 13px; }
+}
