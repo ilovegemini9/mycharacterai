@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
 
+# Search and AI crawlers may access public pages. Private and unlisted character
+# visibility is enforced by the application and must never be added to the sitemap.
+
 Sitemap: https://characterplay.online/sitemap.xml

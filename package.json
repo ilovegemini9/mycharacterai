@@ -5,13 +5,15 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite --host",
-    "build": "vite build",
+    "build": "vite build && node scripts/prerender-characters.mjs",
     "start": "vite preview --host",
     "preview": "vite preview --host",
     "check": "tsc --noEmit",
     "test:router": "tsx scripts/router-check.ts",
-    "test": "pnpm run test:router",
-    "format": "prettier --write ."
+    "test": "pnpm run test:router && pnpm run test:seo && node --check api/character.js",
+    "format": "prettier --write .",
+    "test:seo": "node scripts/character-html-check.mjs",
+    "test:prerender": "node scripts/character-prerender-check.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

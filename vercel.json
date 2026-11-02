@@ -5,7 +5,25 @@
   "buildCommand": "pnpm build",
   "outputDirectory": "dist/public",
   "routes": [
-    { "handle": "filesystem" },
-    { "src": "/(.*)", "dest": "/index.html" }
-  ]
+    {
+      "src": "/sitemap\\.xml",
+      "dest": "/api/sitemap"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/character/(?<id>[a-zA-Z0-9_-]+)/?",
+      "dest": "/api/character?id=$id"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "functions": {
+    "api/character.js": {
+      "includeFiles": "dist/public/index.html"
+    }
+  }
 }
