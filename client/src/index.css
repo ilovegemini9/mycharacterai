@@ -627,3 +627,68 @@ footer a{color:#aab4d2}
 .modal .character-preview img { width: 86px; height: 86px; flex: 0 0 86px; object-fit: contain; border-radius: 14px; background: #29213b; }
 .modal .character-preview h3 { margin: 0 0 5px; color: #fff; }
 .modal .character-preview p { margin: 7px 0 0; color: #bac3d8; line-height: 1.5; }
+
+/* Desktop readability pass: larger type and less crowded character cards */
+@media (min-width: 701px) {
+  .main-content { padding-left: clamp(28px, 3vw, 52px); padding-right: clamp(28px, 3vw, 52px); }
+  .topbar { height: 74px; gap: 15px; }
+  .top-search { height: 46px; }
+  .top-search input { font-size: 15px; }
+  .auth-text-btn, .auth-create-btn { min-height: 42px; padding-left: 20px; padding-right: 20px; font-size: 14px; }
+  .nav-item { min-height: 43px; font-size: 14px; }
+  .side-label { font-size: 10px; }
+  .category-link { min-height: 36px; font-size: 13px; }
+  .creator-promo strong { font-size: 15px; }
+  .creator-promo p { font-size: 12px; line-height: 1.55; }
+  .creator-promo button { min-height: 38px; font-size: 12px; }
+  .profile-row-copy strong { font-size: 13px; }
+  .profile-row-copy span { font-size: 11px; }
+
+  .discover, .listing, .combined-discover { max-width: 1520px; }
+  .section-heading h2, .listing h1 { font-size: 30px; }
+  .section-heading p, .section-subtitle { font-size: 14px; }
+  .category-pills { gap: 12px; }
+  .category-pills button { min-height: 46px; padding: 0 20px; font-size: 14px; }
+  .shelf-heading h2 { font-size: 27px; }
+  .shelf-heading .eyebrow { font-size: 11px; }
+  .character-rail { grid-auto-columns: minmax(220px, 1fr); gap: 17px; }
+  .character-rail .card-image-button { height: 190px; }
+  .character-rail .card-body { padding: 14px; }
+  .character-rail .card-body h3, .card-title-row h3 { font-size: 16px; }
+  .character-rail .card-body .role, .role { font-size: 12px; }
+  .character-rail .card-body p, .card-body > p { font-size: 13px; line-height: 1.65; }
+  .card-meta { font-size: 11px; gap: 10px; }
+  .card-greeting { font-size: 12px !important; line-height: 1.55; }
+  .tags span { font-size: 10px; padding: 6px 8px; }
+  .card-creator { font-size: 11px; }
+  .card-image-button { height: 190px; }
+  .card-body { padding: 14px; }
+  .character-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
+  .featured-tile { gap: 14px; padding: 13px; }
+  .featured-tile img { width: 82px; height: 82px; flex-basis: 82px; }
+  .featured-tile strong { font-size: 14px; }
+  .featured-tile small { font-size: 12px; }
+  .featured-tile em { font-size: 11px; }
+  .try-grid > button { padding: 14px; gap: 12px; }
+  .try-grid strong { font-size: 13px; }
+  .try-grid small { font-size: 11px; }
+  .prompt-rail > button { padding: 16px; gap: 12px; }
+  .prompt-person strong { font-size: 13px; }
+  .prompt-person small { font-size: 11px; }
+  .prompt-line { font-size: 12px; line-height: 1.6; }
+  .prompt-open { font-size: 11px; }
+  .try-tile { min-height: 132px; padding: 19px; }
+  .try-tile strong { font-size: 16px; }
+  .try-tile span { font-size: 13px; }
+  .category-tile { min-height: 48px; padding: 14px; font-size: 13px; }
+  .discovery-welcome-copy > p { font-size: 16px; }
+  .discovery-search { min-height: 58px; }
+  .discovery-search input { font-size: 15px; }
+  .hero-copy > p { font-size: 15px; }
+  .primary-btn, .secondary-btn { min-height: 46px; font-size: 13px; }
+  .modal label { font-size: 13px; }
+  .modal input, .modal textarea, .modal select { font-size: 14px; }
+}
+@media (min-width: 1500px) {
+  .character-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+}
