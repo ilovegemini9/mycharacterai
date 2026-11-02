@@ -2,6 +2,16 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 
 const SITE_URL = "https://characterplay.online";
 const PAGE_SIZE = 1000;
+const STARTER_CHARACTER_IDS = [
+  "starter-akira",
+  "starter-yuna",
+  "starter-ren",
+  "starter-kaede",
+  "starter-haru",
+  "starter-sora",
+  "starter-mika",
+  "starter-daichi",
+];
 
 type PublicCharacter = {
   id: string;
@@ -23,7 +33,7 @@ export default async function handler(_req: VercelRequest, res: VercelResponse) 
   }
 
   try {
-    const characters: PublicCharacter[] = [];
+    const characters: PublicCharacter[] = STARTER_CHARACTER_IDS.map((id) => ({ id }));
     let offset = 0;
 
     while (true) {
@@ -59,7 +69,7 @@ export default async function handler(_req: VercelRequest, res: VercelResponse) 
 
     const urls = [
       `  <url><loc>${SITE_URL}/</loc></url>`,
-      ...characters.map((character) => {
+      ...Array.from(new Map(characters.map((character) => [character.id, character])).values()).map((character) => {
         const loc = `${SITE_URL}/character/${encodeURIComponent(character.id)}`;
         return `  <url><loc>${xmlEscape(loc)}</loc></url>`;
       }),
