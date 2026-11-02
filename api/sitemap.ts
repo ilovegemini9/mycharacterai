@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 
 const SITE_URL = "https://characterplay.online";
@@ -32,14 +33,14 @@ function publicImageUrl(value: unknown): string | null {
   }
 }
 
-export default async function handler(_req: VercelRequest, res: VercelResponse) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader("Content-Type", "application/xml; charset=utf-8");
-  res.setHeader("Cache-Control", "public, s-maxage=900, stale-while-revalidate=3600");
 
   const supabaseUrl = process.env.VITE_SUPABASE_URL;
   const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
 
   if (!supabaseUrl || !supabaseKey) {
+    res.setHeader("Cache-Control", "no-store");
     return res.status(503).send("Sitemap temporarily unavailable: Supabase is not configured.");
   }
 
@@ -65,11 +66,13 @@ export default async function handler(_req: VercelRequest, res: VercelResponse) 
 
       if (!response.ok) {
         console.error("Sitemap character query failed:", response.status);
+        res.setHeader("Cache-Control", "no-store");
         return res.status(502).send("Sitemap temporarily unavailable.");
       }
 
       const page = (await response.json()) as PublicCharacter[];
       if (!Array.isArray(page)) {
+        res.setHeader("Cache-Control", "no-store");
         return res.status(502).send("Sitemap temporarily unavailable.");
       }
 
@@ -90,12 +93,24 @@ export default async function handler(_req: VercelRequest, res: VercelResponse) 
         return `  <url><loc>${xmlEscape(loc)}</loc>${imageTag}</url>`;
       }),
     ];
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${urls.join("\n")}\n</urlset>\n`;
+    const etag = `"${createHash("sha256").update(xml).digest("base64url")}"`;
 
-    return res.status(200).send(
-      `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${urls.join("\n")}\n</urlset>\n`,
-    );
+    res.setHeader("Cache-Control", "public, s-maxage=900, stale-while-revalidate=3600");
+    res.setHeader("ETag", etag);
+
+    const ifNoneMatch = req.headers["if-none-match"];
+    const validators = (Array.isArray(ifNoneMatch) ? ifNoneMatch.join(",") : ifNoneMatch || "")
+      .split(",")
+      .map((value) => value.trim());
+    if (validators.some((value) => value === "*" || value === etag || value === `W/${etag}`)) {
+      return res.status(304).end();
+    }
+
+    return res.status(200).send(xml);
   } catch (error) {
     console.error("Sitemap generation failed:", error);
+    res.setHeader("Cache-Control", "no-store");
     return res.status(500).send("Sitemap temporarily unavailable.");
   }
 }
