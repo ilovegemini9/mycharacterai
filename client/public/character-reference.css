@@ -134,3 +134,8 @@
  .creator-aside-note { display:none !important; }
  .creator-form-actions { margin:16px -17px -18px !important; padding:12px 17px !important; }
 }
+
+
+/* Keep crawlable character-name links visually consistent with card headings. */
+.character-name-link { color:inherit; text-decoration:none; }
+.character-name-link:hover { text-decoration:underline; text-underline-offset:3px; }
