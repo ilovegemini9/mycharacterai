@@ -36,7 +36,29 @@ const [chars,setChars]=useState<Character[]>(()=>{const stored=readLocal<Charact
  const [creatorProfile,setCreatorProfile]=useState<{id:string;name:string}|null>(null);
  const [creatorImage,setCreatorImage]=useState(""),[creatorTags,setCreatorTags]=useState("Anime, Roleplay"),[creatorLorebook,setCreatorLorebook]=useState(""),[creatorDefinition,setCreatorDefinition]=useState(""),[creatorDefinitionPrivate,setCreatorDefinitionPrivate]=useState(false),[creatorAiGreetings,setCreatorAiGreetings]=useState(true),[creatorVoice,setCreatorVoice]=useState("");const [legalPanel,setLegalPanel]=useState<"privacy"|"terms"|"safety"|null>(null);const [shareNotice,setShareNotice]=useState("");
  useEffect(()=>{setProfileName((session?.user.user_metadata?.display_name as string)||session?.user.email?.split("@")[0]||"");setProfileAvatar((session?.user.user_metadata?.avatar_url as string)||"");},[session?.user.id]);
- useEffect(()=>{const title=active?active.name+" | AI Character Chat | mycharacter":"Free AI Character Chat & Roleplay | mycharacter";const description=active?("Chat with "+active.name+", "+active.role.toLowerCase()+". "+active.desc).slice(0,155):"Discover AI anime and manga-inspired characters, chat through stories and roleplay, or create your own character for free.";document.title=title;let meta=document.querySelector('meta[name="description"]');if(!meta){meta=document.createElement("meta");meta.setAttribute("name","description");document.head.appendChild(meta);}meta.setAttribute("content",description);let canonical=document.querySelector('link[rel="canonical"]');if(!canonical){canonical=document.createElement("link");canonical.setAttribute("rel","canonical");document.head.appendChild(canonical);}canonical.setAttribute("href",active?"https://characterplay.online/character/"+encodeURIComponent(String(active.id)):"https://characterplay.online/");},[active]);
+ useEffect(()=>{
+  const isPublicProfile=view==="Profile"&&!!active&&active.isPublic!==false;
+  const isDiscover=view==="Discover"&&!query.trim()&&!selectedCategories.length;
+  const title=isPublicProfile?active!.name+" | AI Character Profile | mycharacter":"Free AI Character Chat & Roleplay | mycharacter";
+  const description=isPublicProfile?("Meet "+active!.name+": "+active!.role+". "+active!.desc).replace(/\\s+/g," ").slice(0,155):"Discover AI characters, chat through stories and roleplay, or create your own character for free.";
+  const canonical=isPublicProfile?"https://characterplay.online/characters/"+encodeURIComponent(String(active!.id)):"https://characterplay.online/";
+  const shouldIndex=isPublicProfile||isDiscover;
+  document.title=title;
+  const setMeta=(selector:string,attribute:string,value:string)=>{let element=document.querySelector(selector);if(!element){element=document.createElement("meta");const match=selector.match(/\\[(name|property)=["']([^"']+)["']\\]/);if(match)element.setAttribute(match[1],match[2]);document.head.appendChild(element);}element.setAttribute(attribute,value);};
+  setMeta('meta[name="description"]',"content",description);
+  setMeta('meta[name="robots"]',"content",shouldIndex?"index,follow":"noindex,follow");
+  let canonicalLink=document.querySelector('link[rel="canonical"]') as HTMLLinkElement|null;
+  if(!canonicalLink){canonicalLink=document.createElement("link");canonicalLink.rel="canonical";document.head.appendChild(canonicalLink);}
+  canonicalLink.href=canonical;
+  setMeta('meta[property="og:title"]',"content",title);
+  setMeta('meta[property="og:description"]',"content",description);
+  setMeta('meta[property="og:url"]',"content",canonical);
+  setMeta('meta[property="og:type"]',"content","website");
+  setMeta('meta[property="og:image"]',"content",isPublicProfile?active!.image:"https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&h=630&q=85");
+  setMeta('meta[name="twitter:title"]',"content",title);
+  setMeta('meta[name="twitter:description"]',"content",description);
+  setMeta('meta[name="twitter:image"]',"content",isPublicProfile?active!.image:"https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&h=630&q=85");
+ },[active,view,query,selectedCategories]);
  const defaultAvatar=session?"https://api.dicebear.com/9.x/adventurer/svg?seed="+encodeURIComponent(session.user.id):"";
  const accountAvatar=session?(profileAvatar||defaultAvatar):"";
 useEffect(()=>{chatLoadIdRef.current+=1;setChars(()=>{const stored=readLocal<Character[]>(accountStorageKey("characters",session),[]).filter(c=>typeof c.id==="string");const ids=new Set(stored.map(c=>String(c.id)));return [...starterCharacters.filter(c=>!ids.has(String(c.id))),...stored];});setSaved(readLocal(accountStorageKey("saved",session),[]));setChats(session?readLocal(accountStorageKey("chats",session),[]):[]);setMessages([]);setActive(null);setView("Discover");setChatError("");},[session?.user.id]);
