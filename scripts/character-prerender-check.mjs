@@ -38,9 +38,9 @@ visit(hubAst);
 assert.ok(Array.isArray(starters) && starters.length > 0, "starterCharacters must be a non-empty literal array");
 
 const sitemapSource = await fs.readFile(sitemapPath, "utf8");
-const starterMap = sitemapSource.match(/const STARTER_CHARACTER_IMAGES\\s*:[^=]+ = \\{([\\s\\S]*?)\\n\\};/);
+const starterMap = sitemapSource.match(/const STARTER_CHARACTER_IMAGES\s*:[^=]+ = \{([\s\S]*?)\n\};/);
 assert.ok(starterMap, "Could not locate STARTER_CHARACTER_IMAGES in sitemap.ts");
-const sitemapIds = new Set(Array.from(starterMap[1].matchAll(/["']([a-zA-Z0-9_-]+)["']\\s*:/g), (match) => match[1]));
+const sitemapIds = new Set(Array.from(starterMap[1].matchAll(/["']([a-zA-Z0-9_-]+)["']\s*:/g), (match) => match[1]));
 
 const ids = new Set();
 for (const character of starters) {
@@ -53,9 +53,9 @@ for (const character of starters) {
   const file = path.join(outputDir, "character", character.id, "index.html");
   const html = await fs.readFile(file, "utf8");
   const canonical = "https://characterplay.online/character/" + encodeURIComponent(character.id);
-  assert.match(html, new RegExp("<title>[^<]+\\\\| AI Character Profile \\| mycharacter<\\/title>"), character.id + " must have a character-specific title");
+  assert.match(html, /<title>[^<]+ \| AI Character Profile \| mycharacter<\/title>/, character.id + " must have a character-specific title");
   assert.ok(html.includes('rel="canonical" href="' + canonical + '"'), character.id + " must have a self-referencing canonical");
-  assert.match(html, /<h1>[^<]+<\\/h1>/, character.id + " must have an H1 in raw HTML");
+  assert.match(html, /<h1>[^<]+<\/h1>/, character.id + " must have an H1 in raw HTML");
   assert.match(html, /"@type":"ProfilePage"/, character.id + " must have ProfilePage JSON-LD");
   assert.match(html, /<meta name="description" content="[^"]+"/, character.id + " must have a meta description");
   assert.ok(html.includes('id="root"><main id="character-seo-content"'), character.id + " SEO content must be present in initial HTML");
