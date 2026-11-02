@@ -66,7 +66,7 @@ export default async function handler(req, res) {
     });
 
     res.setHeader("Content-Type", "text/html; charset=utf-8");
-    res.setHeader("Cache-Control", "public, s-maxage=60, stale-while-revalidate=120");
+    res.setHeader("Cache-Control", "no-store");
     if (req.method === "HEAD") return res.status(200).end();
     return res.status(200).send(html);
   } catch (error) {
