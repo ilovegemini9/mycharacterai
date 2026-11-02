@@ -5,7 +5,6 @@ const PAGE_SIZE = 1000;
 
 type PublicCharacter = {
   id: string;
-  created_at?: string | null;
 };
 
 function xmlEscape(value: string): string {
@@ -29,7 +28,7 @@ export default async function handler(_req: VercelRequest, res: VercelResponse) 
 
     while (true) {
       const url = new URL("/rest/v1/character_discovery", supabaseUrl);
-      url.searchParams.set("select", "id,created_at");
+      url.searchParams.set("select", "id");
       url.searchParams.set("is_public", "eq.true");
       url.searchParams.set("visibility", "eq.public");
       url.searchParams.set("order", "created_at.desc");
@@ -62,10 +61,7 @@ export default async function handler(_req: VercelRequest, res: VercelResponse) 
       `  <url><loc>${SITE_URL}/</loc></url>`,
       ...characters.map((character) => {
         const loc = `${SITE_URL}/character/${encodeURIComponent(character.id)}`;
-        const lastmod = character.created_at && !Number.isNaN(Date.parse(character.created_at))
-          ? `<lastmod>${xmlEscape(new Date(character.created_at).toISOString())}</lastmod>`
-          : "";
-        return `  <url><loc>${xmlEscape(loc)}</loc>${lastmod}</url>`;
+        return `  <url><loc>${xmlEscape(loc)}</loc></url>`;
       }),
     ];
 
