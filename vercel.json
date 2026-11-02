@@ -5,7 +5,16 @@
   "buildCommand": "pnpm build",
   "outputDirectory": "dist/public",
   "routes": [
-    { "handle": "filesystem" },
-    { "src": "/(.*)", "dest": "/index.html" }
+    {
+      "src": "/sitemap\\.xml",
+      "dest": "/api/sitemap"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
   ]
 }
