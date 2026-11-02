@@ -41,7 +41,7 @@ const [chars,setChars]=useState<Character[]>(()=>{const stored=readLocal<Charact
   const isDiscover=view==="Discover"&&!query.trim()&&!selectedCategories.length;
   const title=isPublicProfile?active!.name+" | AI Character Profile | mycharacter":"Free AI Character Chat & Roleplay | mycharacter";
   const description=isPublicProfile?("Meet "+active!.name+": "+active!.role+". "+active!.desc).replace(/\\s+/g," ").slice(0,155):"Discover AI characters, chat through stories and roleplay, or create your own character for free.";
-  const canonical=isPublicProfile?"https://characterplay.online/characters/"+encodeURIComponent(String(active!.id)):"https://characterplay.online/";
+  const canonical=isPublicProfile?"https://characterplay.online/character/"+encodeURIComponent(String(active!.id)):"https://characterplay.online/";
   const shouldIndex=isPublicProfile||isDiscover;
   document.title=title;
   const setMeta=(selector:string,attribute:string,value:string)=>{let element=document.querySelector(selector);if(!element){element=document.createElement("meta");const match=selector.match(/\\[(name|property)=["']([^"']+)["']\\]/);if(match)element.setAttribute(match[1],match[2]);document.head.appendChild(element);}element.setAttribute(attribute,value);};
