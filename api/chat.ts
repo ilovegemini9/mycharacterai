@@ -50,6 +50,24 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     .filter(Boolean)
     .slice(0, 40);
 
+  // Lorebook entries are stored in the character personality field as a plain-text block.
+  // Each non-empty line uses: keyword or phrase: world detail.
+  const personalityText = String(character.personality || "");
+  const lorebookBlock = personalityText.match(/Lorebook:\\s*([\\s\\S]*?)(?:\\n\\n|$)/i)?.[1] || "";
+  const lorebookEntries = lorebookBlock.split(/\\n+/).map((line: string) => {
+    const match = line.match(/^\\s*([^:]{2,100}):\\s*(.{1,1000})\\s*$/);
+    return match ? { keywords: match[1].split(/[,|]/).map((word: string) => word.trim().toLowerCase()).filter(Boolean), detail: match[2].trim() } : null;
+  }).filter(Boolean) as Array<{ keywords: string[]; detail: string }>;
+  const latestUserText = [...messages].reverse().find((message: { role: string }) => message.role === "user")?.content || "";
+  const matchedLorebook = lorebookEntries.filter((entry) => entry.keywords.some((keyword) => keyword && latestUserText.toLowerCase().includes(keyword))).slice(0, 8);
+  const lorebookContext = matchedLorebook.length
+    ? ["LOREBOOK CONTEXT: The following world facts match keywords in the latest user message. Use them naturally and consistently; do not announce keyword matching.", ...matchedLorebook.map((entry) => entry.detail)].join("\\n")
+    : "LOREBOOK CONTEXT: No lorebook keywords matched the latest user message.";
+  const voicePreference = personalityText.match(/Voice preference:\\s*([^\\n]+)/i)?.[1]?.trim();
+  const greetingMode = /Generate varied greetings for new chats/i.test(personalityText)
+    ? "For a brand-new conversation, vary the opening greeting while preserving the character's established personality and setting."
+    : "Use the character's saved greeting as the canonical opening style.";
+
   const recentAssistantReplies = messages
     .filter((m: { role: string }) => m.role === "assistant")
     .slice(-3)
@@ -72,6 +90,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     `Scenario / current setting: ${String(character.scenario || "A setting shaped naturally by the conversation.").slice(0, 2000)}`,
     `Backstory and important history: ${String(character.backstory || "No additional backstory provided.").slice(0, 2500)}`,
     `Opening greeting: ${String(character.greeting || "").slice(0, 1500)}`,
+    greetingMode,
+    voicePreference ? `Voice and delivery preference: ${voicePreference}. Reflect this through word choice, pacing, and tone in text replies.` : "",
+    lorebookContext,
     "Use the scenario as the active scene and the backstory as continuity context. Follow the character rules and example dialogue included in the personality field; treat example dialogue as style guidance, not as text to repeat.",
     `Topics/tags: ${Array.isArray(character.tags) ? character.tags.join(", ").slice(0, 300) : "general"}`,
     memoryContext,
