@@ -2,23 +2,34 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 
 const SITE_URL = "https://characterplay.online";
 const PAGE_SIZE = 1000;
-const STARTER_CHARACTER_IDS = [
-  "starter-akira",
-  "starter-yuna",
-  "starter-ren",
-  "starter-kaede",
-  "starter-haru",
-  "starter-sora",
-  "starter-mika",
-  "starter-daichi",
-];
+const STARTER_CHARACTER_IMAGES: Record<string, string> = {
+  "starter-akira": "https://api.dicebear.com/9.x/adventurer/svg?seed=Akira-Hayashi&backgroundColor=b6e3f4",
+  "starter-yuna": "https://api.dicebear.com/9.x/adventurer/svg?seed=Yuna-Kisaragi&backgroundColor=ffdfbf",
+  "starter-ren": "https://api.dicebear.com/9.x/adventurer/svg?seed=Ren-Takahashi&backgroundColor=c0aede",
+  "starter-kaede": "https://api.dicebear.com/9.x/adventurer/svg?seed=Kaede-Mori&backgroundColor=d1d4f9",
+  "starter-haru": "https://api.dicebear.com/9.x/adventurer/svg?seed=Haru-Sato&backgroundColor=ffd5dc",
+  "starter-sora": "https://api.dicebear.com/9.x/adventurer/svg?seed=Sora-Amamiya&backgroundColor=c4f1d0",
+  "starter-mika": "https://api.dicebear.com/9.x/adventurer/svg?seed=Mika-Fujimoto&backgroundColor=ffe4a8",
+  "starter-daichi": "https://api.dicebear.com/9.x/adventurer/svg?seed=Daichi-Kuroda&backgroundColor=c9d7c1"
+};
 
 type PublicCharacter = {
   id: string;
+  image_url?: string | null;
 };
 
 function xmlEscape(value: string): string {
   return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
+}
+
+function publicImageUrl(value: unknown): string | null {
+  if (typeof value !== "string" || !value.trim()) return null;
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" || url.protocol === "http:" ? url.toString() : null;
+  } catch {
+    return null;
+  }
 }
 
 export default async function handler(_req: VercelRequest, res: VercelResponse) {
@@ -33,12 +44,12 @@ export default async function handler(_req: VercelRequest, res: VercelResponse) 
   }
 
   try {
-    const characters: PublicCharacter[] = STARTER_CHARACTER_IDS.map((id) => ({ id }));
+    const characters: PublicCharacter[] = Object.entries(STARTER_CHARACTER_IMAGES).map(([id, image_url]) => ({ id, image_url }));
     let offset = 0;
 
     while (true) {
       const url = new URL("/rest/v1/character_discovery", supabaseUrl);
-      url.searchParams.set("select", "id");
+      url.searchParams.set("select", "id,image_url");
       url.searchParams.set("is_public", "eq.true");
       url.searchParams.set("visibility", "eq.public");
       url.searchParams.set("order", "created_at.desc");
@@ -67,16 +78,21 @@ export default async function handler(_req: VercelRequest, res: VercelResponse) 
       offset += PAGE_SIZE;
     }
 
+    const uniqueCharacters = Array.from(new Map(characters.map((character) => [character.id, character])).values());
     const urls = [
       `  <url><loc>${SITE_URL}/</loc></url>`,
-      ...Array.from(new Map(characters.map((character) => [character.id, character])).values()).map((character) => {
+      ...uniqueCharacters.map((character) => {
         const loc = `${SITE_URL}/character/${encodeURIComponent(character.id)}`;
-        return `  <url><loc>${xmlEscape(loc)}</loc></url>`;
+        const image = publicImageUrl(character.image_url);
+        const imageTag = image
+          ? `<image:image><image:loc>${xmlEscape(image)}</image:loc></image:image>`
+          : "";
+        return `  <url><loc>${xmlEscape(loc)}</loc>${imageTag}</url>`;
       }),
     ];
 
     return res.status(200).send(
-      `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join("\n")}\n</urlset>\n`,
+      `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${urls.join("\n")}\n</urlset>\n`,
     );
   } catch (error) {
     console.error("Sitemap generation failed:", error);
