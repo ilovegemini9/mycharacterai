@@ -13,8 +13,17 @@
       "handle": "filesystem"
     },
     {
+      "src": "/character/(?<id>[a-zA-Z0-9_-]+)/?",
+      "dest": "/api/character?id=$id"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }
-  ]
+  ],
+  "functions": {
+    "api/character.js": {
+      "includeFiles": "dist/public/index.html"
+    }
+  }
 }
