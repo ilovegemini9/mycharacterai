@@ -627,3 +627,529 @@ footer a{color:#aab4d2}
 .modal .character-preview img { width: 86px; height: 86px; flex: 0 0 86px; object-fit: contain; border-radius: 14px; background: #29213b; }
 .modal .character-preview h3 { margin: 0 0 5px; color: #fff; }
 .modal .character-preview p { margin: 7px 0 0; color: #bac3d8; line-height: 1.5; }
+
+/* Desktop readability pass: larger type and less crowded character cards */
+@media (min-width: 701px) {
+  .main-content { padding-left: clamp(28px, 3vw, 52px); padding-right: clamp(28px, 3vw, 52px); }
+  .topbar { height: 74px; gap: 15px; }
+  .top-search { height: 46px; }
+  .top-search input { font-size: 15px; }
+  .auth-text-btn, .auth-create-btn { min-height: 42px; padding-left: 20px; padding-right: 20px; font-size: 14px; }
+  .nav-item { min-height: 43px; font-size: 14px; }
+  .side-label { font-size: 10px; }
+  .category-link { min-height: 36px; font-size: 13px; }
+  .creator-promo strong { font-size: 15px; }
+  .creator-promo p { font-size: 12px; line-height: 1.55; }
+  .creator-promo button { min-height: 38px; font-size: 12px; }
+  .profile-row-copy strong { font-size: 13px; }
+  .profile-row-copy span { font-size: 11px; }
+
+  .discover, .listing, .combined-discover { max-width: 1520px; }
+  .section-heading h2, .listing h1 { font-size: 30px; }
+  .section-heading p, .section-subtitle { font-size: 14px; }
+  .category-pills { gap: 12px; }
+  .category-pills button { min-height: 46px; padding: 0 20px; font-size: 14px; }
+  .shelf-heading h2 { font-size: 27px; }
+  .shelf-heading .eyebrow { font-size: 11px; }
+  .character-rail { grid-auto-columns: minmax(220px, 1fr); gap: 17px; }
+  .character-rail .card-image-button { height: 190px; }
+  .character-rail .card-body { padding: 14px; }
+  .character-rail .card-body h3, .card-title-row h3 { font-size: 16px; }
+  .character-rail .card-body .role, .role { font-size: 12px; }
+  .character-rail .card-body p, .card-body > p { font-size: 13px; line-height: 1.65; }
+  .card-meta { font-size: 11px; gap: 10px; }
+  .card-greeting { font-size: 12px !important; line-height: 1.55; }
+  .tags span { font-size: 10px; padding: 6px 8px; }
+  .card-creator { font-size: 11px; }
+  .card-image-button { height: 190px; }
+  .card-body { padding: 14px; }
+  .character-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
+  .featured-tile { gap: 14px; padding: 13px; }
+  .featured-tile img { width: 82px; height: 82px; flex-basis: 82px; }
+  .featured-tile strong { font-size: 14px; }
+  .featured-tile small { font-size: 12px; }
+  .featured-tile em { font-size: 11px; }
+  .try-grid > button { padding: 14px; gap: 12px; }
+  .try-grid strong { font-size: 13px; }
+  .try-grid small { font-size: 11px; }
+  .prompt-rail > button { padding: 16px; gap: 12px; }
+  .prompt-person strong { font-size: 13px; }
+  .prompt-person small { font-size: 11px; }
+  .prompt-line { font-size: 12px; line-height: 1.6; }
+  .prompt-open { font-size: 11px; }
+  .try-tile { min-height: 132px; padding: 19px; }
+  .try-tile strong { font-size: 16px; }
+  .try-tile span { font-size: 13px; }
+  .category-tile { min-height: 48px; padding: 14px; font-size: 13px; }
+  .discovery-welcome-copy > p { font-size: 16px; }
+  .discovery-search { min-height: 58px; }
+  .discovery-search input { font-size: 15px; }
+  .hero-copy > p { font-size: 15px; }
+  .primary-btn, .secondary-btn { min-height: 46px; font-size: 13px; }
+  .modal label { font-size: 13px; }
+  .modal input, .modal textarea, .modal select { font-size: 14px; }
+}
+@media (min-width: 1500px) {
+  .character-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+}
+
+/* Keep the desktop sidebar controls readable after compact-height rules */
+@media (min-width: 701px) {
+  .sidebar > .nav-item { height: 43px; min-height: 43px; font-size: 14px; }
+  .sidebar > .category-link { height: 35px; min-height: 35px; font-size: 13px; }
+}
+
+
+/* Second desktop readability pass: give every discovery card more room */
+@media (min-width: 1001px) {
+  body { font-size: 16px; }
+  .main-content { padding-left: clamp(32px, 3.2vw, 64px); padding-right: clamp(32px, 3.2vw, 64px); }
+  .discover, .listing, .combined-discover { max-width: 1600px; }
+  .section-heading { margin-top: 48px; margin-bottom: 22px; }
+  .section-heading h2, .listing h1 { font-size: 32px; }
+  .section-heading p, .section-subtitle { font-size: 15px; }
+  .combined-discover .character-rail {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+  }
+  .combined-discover .character-rail .card-image-button { height: 245px; }
+  .combined-discover .character-rail .card-body { padding: 18px; }
+  .combined-discover .character-rail .card-body h3,
+  .combined-discover .character-rail .card-title-row h3 { font-size: 18px; }
+  .combined-discover .character-rail .role { font-size: 13px; }
+  .combined-discover .character-rail .card-body p { font-size: 14px; line-height: 1.7; }
+  .combined-discover .character-rail .card-meta { font-size: 12px; }
+  .combined-discover .character-rail .card-greeting { font-size: 13px !important; }
+  .combined-discover .character-rail .tags span { font-size: 11px; padding: 7px 9px; }
+  .combined-discover .featured-rail { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+  .combined-discover .featured-tile { padding: 17px; gap: 16px; }
+  .combined-discover .featured-tile img { width: 96px; height: 96px; flex-basis: 96px; }
+  .combined-discover .featured-tile strong { font-size: 16px; }
+  .combined-discover .featured-tile small { font-size: 13px; }
+  .combined-discover .featured-tile em { font-size: 12px; }
+  .try-tiles { gap: 16px; }
+  .try-tile { min-height: 150px; padding: 22px; }
+  .try-tile strong { font-size: 18px; }
+  .try-tile span { font-size: 14px; }
+  .prompt-chips { gap: 12px; }
+  .prompt-chips button { padding: 13px 18px; font-size: 14px; }
+}
+@media (min-width: 1600px) {
+  .combined-discover .character-rail { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .combined-discover .featured-rail { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@media (min-width: 1001px) and (max-width: 1250px) {
+  .combined-discover .character-rail { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .combined-discover .featured-rail { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .combined-discover .character-rail .card-image-button { height: 220px; }
+}
+
+
+/* Desktop visual redesign: spacious editorial layout, larger portraits and clear type */
+@media (min-width: 1001px) {
+  .site-shell { min-height: 100vh; }
+  .sidebar { width: 270px; padding: 24px 18px; }
+  .main-content { margin-left: 270px; padding: 0 clamp(36px, 4vw, 76px); }
+  .topbar { height: 82px; }
+  .top-search { max-width: 760px; height: 50px; }
+  .top-search input { font-size: 16px; }
+  .auth-text-btn, .auth-create-btn { min-height: 46px; font-size: 15px; padding-inline: 24px; }
+  .discover, .listing, .combined-discover { max-width: 1760px; }
+  .combined-discover .discovery-welcome { min-height: 340px; padding: 58px 64px; margin: 24px 0 48px; }
+  .combined-discover .discovery-welcome-copy h1 { font-size: clamp(48px, 4vw, 68px); max-width: 760px; }
+  .combined-discover .discovery-welcome-copy > p { font-size: 18px; max-width: 680px; }
+  .combined-discover .discovery-search { max-width: 650px; min-height: 64px; }
+  .combined-discover .discovery-search input { font-size: 17px; }
+  .combined-discover .discovery-welcome-art { flex-basis: 270px; width: 270px; height: 270px; }
+  .combined-discover .discovery-shelf { margin: 48px 0 58px; }
+  .combined-discover .shelf-heading { margin-bottom: 24px; }
+  .combined-discover .shelf-heading h2 { font-size: 32px; }
+  .combined-discover .shelf-heading p { font-size: 16px; }
+  .combined-discover .shelf-heading .eyebrow { font-size: 12px; }
+  .combined-discover .character-rail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px;
+  }
+  .combined-discover .character-rail .character-card { border-radius: 20px; overflow: hidden; }
+  .combined-discover .character-rail .card-image-button { height: clamp(290px, 24vw, 390px); }
+  .combined-discover .character-rail .card-body { padding: 22px 24px 24px; }
+  .combined-discover .character-rail .card-title-row h3,
+  .combined-discover .character-rail .card-body h3 { font-size: 22px; line-height: 1.25; }
+  .combined-discover .character-rail .role { font-size: 15px; }
+  .combined-discover .character-rail .card-body > p { font-size: 16px; line-height: 1.75; margin-top: 13px; }
+  .combined-discover .character-rail .card-meta { font-size: 13px; }
+  .combined-discover .character-rail .card-greeting { font-size: 15px !important; line-height: 1.7; }
+  .combined-discover .character-rail .tags { gap: 8px; }
+  .combined-discover .character-rail .tags span { font-size: 12px; padding: 8px 11px; }
+  .combined-discover .character-rail .card-arrow { width: 44px; height: 44px; }
+  .combined-discover .featured-rail { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+  .combined-discover .featured-tile { padding: 22px; gap: 20px; border-radius: 18px; }
+  .combined-discover .featured-tile img { width: 112px; height: 112px; flex-basis: 112px; }
+  .combined-discover .featured-tile strong { font-size: 18px; }
+  .combined-discover .featured-tile small { font-size: 14px; }
+  .combined-discover .featured-tile em { font-size: 13px; }
+  .combined-discover .try-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+  .combined-discover .try-tile { min-height: 160px; padding: 26px; border-radius: 18px; }
+  .combined-discover .try-tile strong { font-size: 21px; }
+  .combined-discover .try-tile span { font-size: 16px; }
+  .combined-discover .category-tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+  .combined-discover .category-tile { min-height: 60px; padding: 18px; font-size: 15px; }
+  .combined-discover .prompt-chips { gap: 14px; }
+  .combined-discover .prompt-chips button { padding: 15px 21px; font-size: 15px; }
+  .sidebar .brand { font-size: 26px; padding-bottom: 38px; }
+  .sidebar .nav-item { min-height: 48px; font-size: 15px; }
+  .sidebar .side-label { font-size: 11px; }
+  .sidebar .category-link { min-height: 40px; font-size: 14px; }
+}
+@media (min-width: 1700px) {
+  .combined-discover .character-rail { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .combined-discover .featured-rail { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .combined-discover .try-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (min-width: 1001px) and (max-width: 1250px) {
+  .main-content { padding-inline: 28px; }
+  .combined-discover .character-rail { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+  .combined-discover .character-rail .card-image-button { height: 260px; }
+}
+
+
+/* Correct desktop discovery sizing: the live JSX renders .character-grid, not .character-rail */
+@media (min-width: 1001px) {
+  .combined-discover {
+    width: 100%;
+    max-width: 1760px;
+    margin-inline: auto;
+  }
+  .combined-discover .for-you-heading {
+    align-items: center;
+    gap: 28px;
+    margin: 38px 0 28px;
+  }
+  .combined-discover .for-you-heading h2 {
+    font-size: clamp(34px, 2.4vw, 44px);
+    line-height: 1.15;
+    letter-spacing: -1.2px;
+  }
+  .combined-discover .for-you-heading .eyebrow {
+    font-size: 13px;
+  }
+  .combined-discover .results-count,
+  .combined-discover .section-heading p {
+    font-size: 16px;
+  }
+  .combined-discover .compact-discovery-search {
+    width: min(42%, 560px);
+    min-height: 58px;
+    padding-inline: 18px;
+  }
+  .combined-discover .compact-discovery-search input {
+    font-size: 17px;
+  }
+  .combined-discover > .tabs {
+    gap: 12px;
+    padding-bottom: 22px;
+  }
+  .combined-discover > .tabs button {
+    min-height: 46px;
+    height: auto;
+    padding: 0 19px;
+    font-size: 14px;
+  }
+  .combined-discover .character-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px;
+    align-items: stretch;
+  }
+  .combined-discover .character-grid > .character-card {
+    border-radius: 20px;
+    min-width: 0;
+  }
+  .combined-discover .character-grid .card-image-button {
+    height: clamp(300px, 25vw, 410px);
+  }
+  .combined-discover .character-grid .card-badge {
+    top: 16px;
+    left: 16px;
+    padding: 8px 11px;
+    font-size: 11px;
+  }
+  .combined-discover .character-grid .card-body {
+    padding: 24px 26px 26px;
+  }
+  .combined-discover .character-grid .card-title-row {
+    gap: 16px;
+  }
+  .combined-discover .character-grid .card-title-row h3 {
+    font-size: 25px;
+    line-height: 1.25;
+  }
+  .combined-discover .character-grid .role {
+    font-size: 16px;
+  }
+  .combined-discover .character-grid .heart {
+    width: 40px;
+    height: 40px;
+    flex-basis: 40px;
+  }
+  .combined-discover .character-grid .card-body > p {
+    font-size: 17px;
+    line-height: 1.75;
+    min-height: 0;
+    margin: 14px 0 18px;
+    -webkit-line-clamp: 3;
+  }
+  .combined-discover .character-grid .card-meta {
+    gap: 14px;
+    font-size: 13px;
+  }
+  .combined-discover .character-grid .card-greeting {
+    font-size: 15px !important;
+    line-height: 1.7;
+  }
+  .combined-discover .character-grid .tags {
+    gap: 9px;
+  }
+  .combined-discover .character-grid .tags span {
+    padding: 8px 11px;
+    font-size: 12px;
+  }
+  .combined-discover .character-grid .card-arrow {
+    width: 44px;
+    height: 44px;
+    flex-basis: 44px;
+  }
+  .combined-discover .create-banner {
+    margin: 52px 0 38px;
+    padding: 30px 34px;
+  }
+  .combined-discover .create-banner h2 {
+    font-size: 22px;
+  }
+  .combined-discover .create-banner p {
+    font-size: 15px;
+  }
+  .combined-discover footer {
+    font-size: 13px;
+    padding: 26px 0 30px;
+  }
+  .sidebar > .nav-item {
+    height: 48px;
+    min-height: 48px;
+    font-size: 15px;
+  }
+  .sidebar > .category-link {
+    height: 40px;
+    min-height: 40px;
+    font-size: 14px;
+  }
+}
+@media (min-width: 1700px) {
+  .combined-discover .character-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 26px;
+  }
+  .combined-discover .character-grid .card-image-button {
+    height: clamp(300px, 20vw, 380px);
+  }
+}
+@media (min-width: 1001px) and (max-width: 1250px) {
+  .combined-discover .for-you-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .combined-discover .compact-discovery-search {
+    width: 100%;
+    max-width: 620px;
+  }
+  .combined-discover .character-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+  .combined-discover .character-grid .card-image-button {
+    height: 290px;
+  }
+}
+
+
+/* Final desktop scale pass: make discovery cards and controls comfortably readable */
+@media (min-width: 1001px) {
+  .main-content {
+    padding-left: clamp(38px, 4vw, 82px);
+    padding-right: clamp(38px, 4vw, 82px);
+  }
+
+  .combined-discover {
+    max-width: 1900px;
+  }
+
+  .combined-discover .for-you-heading {
+    margin-top: 48px;
+    margin-bottom: 34px;
+  }
+
+  .combined-discover .for-you-heading h2 {
+    font-size: clamp(40px, 3vw, 52px);
+  }
+
+  .combined-discover .for-you-heading .eyebrow {
+    font-size: 15px;
+    letter-spacing: 2px;
+  }
+
+  .combined-discover .results-count,
+  .combined-discover .section-heading p {
+    font-size: 18px;
+  }
+
+  .combined-discover .compact-discovery-search {
+    min-height: 68px;
+    width: min(44%, 680px);
+    padding-inline: 22px;
+  }
+
+  .combined-discover .compact-discovery-search input {
+    font-size: 19px;
+  }
+
+  .combined-discover > .tabs {
+    gap: 14px;
+    padding-bottom: 28px;
+  }
+
+  .combined-discover > .tabs button {
+    min-height: 54px;
+    padding-inline: 23px;
+    font-size: 16px;
+    border-radius: 11px;
+  }
+
+  .combined-discover .character-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 34px;
+  }
+
+  .combined-discover .character-grid > .character-card {
+    border-radius: 22px;
+  }
+
+  .combined-discover .character-grid .card-image-button {
+    height: clamp(370px, 30vw, 500px);
+  }
+
+  .combined-discover .character-grid .card-badge {
+    top: 19px;
+    left: 19px;
+    padding: 9px 13px;
+    font-size: 12px;
+  }
+
+  .combined-discover .character-grid .card-body {
+    padding: 30px 32px 32px;
+  }
+
+  .combined-discover .character-grid .card-title-row h3 {
+    font-size: clamp(28px, 2vw, 34px);
+    line-height: 1.2;
+  }
+
+  .combined-discover .character-grid .role {
+    font-size: 18px;
+  }
+
+  .combined-discover .character-grid .heart {
+    width: 46px;
+    height: 46px;
+    flex-basis: 46px;
+  }
+
+  .combined-discover .character-grid .card-body > p {
+    font-size: 19px;
+    line-height: 1.75;
+    margin: 17px 0 22px;
+    -webkit-line-clamp: 3;
+  }
+
+  .combined-discover .character-grid .card-meta {
+    gap: 18px;
+    font-size: 15px;
+  }
+
+  .combined-discover .character-grid .card-meta svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .combined-discover .character-grid .card-greeting {
+    font-size: 17px !important;
+    line-height: 1.75;
+    margin-top: 17px;
+  }
+
+  .combined-discover .character-grid .tags {
+    gap: 10px;
+  }
+
+  .combined-discover .character-grid .tags span {
+    padding: 9px 13px;
+    font-size: 13px;
+  }
+
+  .combined-discover .character-grid .card-arrow {
+    width: 48px;
+    height: 48px;
+    flex-basis: 48px;
+  }
+
+  .combined-discover .create-banner {
+    margin: 62px 0 44px;
+    padding: 36px 40px;
+  }
+
+  .combined-discover .create-banner h2 {
+    font-size: 26px;
+  }
+
+  .combined-discover .create-banner p {
+    font-size: 17px;
+  }
+
+  .combined-discover footer {
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 1800px) {
+  .combined-discover .character-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 30px;
+  }
+
+  .combined-discover .character-grid .card-image-button {
+    height: clamp(340px, 22vw, 440px);
+  }
+
+  .combined-discover .character-grid .card-title-row h3 {
+    font-size: 29px;
+  }
+
+  .combined-discover .character-grid .card-body {
+    padding: 26px 28px 28px;
+  }
+
+  .combined-discover .character-grid .card-body > p {
+    font-size: 17px;
+  }
+}
+
+@media (min-width: 1001px) and (max-width: 1250px) {
+  .combined-discover .character-grid .card-image-button {
+    height: 340px;
+  }
+  .combined-discover .character-grid .card-body {
+    padding: 24px;
+  }
+  .combined-discover .character-grid .card-title-row h3 {
+    font-size: 27px;
+  }
+}
