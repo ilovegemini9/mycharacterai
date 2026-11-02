@@ -43,6 +43,7 @@ assert.ok(starterMap, "Could not locate STARTER_CHARACTER_IMAGES in sitemap.ts")
 const sitemapIds = new Set(Array.from(starterMap[1].matchAll(/["']([a-zA-Z0-9_-]+)["']\s*:/g), (match) => match[1]));
 
 const ids = new Set();
+const titles = new Set();
 for (const character of starters) {
   assert.ok(character && typeof character.id === "string", "Every starter must have a string id");
   assert.match(character.id, /^[a-zA-Z0-9_-]+$/, "Starter id must be safe for a public route");
@@ -53,8 +54,14 @@ for (const character of starters) {
   const file = path.join(outputDir, "character", character.id, "index.html");
   const html = await fs.readFile(file, "utf8");
   const canonical = "https://characterplay.online/character/" + encodeURIComponent(character.id);
-  assert.match(html, /<title>[^<]+ \| AI Character Profile \| mycharacter<\/title>/, character.id + " must have a character-specific title");
+  const expectedTitle = character.name + " | AI Character Profile | mycharacter";
+  assert.ok(html.includes("<title>" + expectedTitle + "</title>"), character.id + " must have a character-specific title");
+  assert.ok(!titles.has(expectedTitle), "Duplicate starter SEO title: " + expectedTitle);
+  titles.add(expectedTitle);
   assert.ok(html.includes('rel="canonical" href="' + canonical + '"'), character.id + " must have a self-referencing canonical");
+  assert.ok(html.includes('property="og:url" content="' + canonical + '"'), character.id + " must have a matching Open Graph URL");
+  assert.ok(html.includes('property="og:title" content="' + expectedTitle + '"'), character.id + " must have a matching Open Graph title");
+  assert.ok(html.includes('name="twitter:title" content="' + expectedTitle + '"'), character.id + " must have a matching Twitter title");
   assert.match(html, /<h1>[^<]+<\/h1>/, character.id + " must have an H1 in raw HTML");
   assert.match(html, /"@type":"ProfilePage"/, character.id + " must have ProfilePage JSON-LD");
   assert.match(html, /<meta name="description" content="[^"]+"/, character.id + " must have a meta description");
