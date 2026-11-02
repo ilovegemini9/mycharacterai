@@ -105,7 +105,7 @@ setMessages([...pending,{from:"bot",text:""}]);setDraft("");setChatError("");set
 let chatId:string|undefined;
 try{
 if(session&&typeof active.id==="string"&&!String(active.id).startsWith("starter-")){chatId=await getOrCreateChat(session,active.id,active.name);await saveChatMessage(session,chatId,{sender:"user",content:userText});}
-const response=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({character:{name:active.name,role:active.role,desc:active.desc,personality:active.personality||"",scenario:active.scenario||"",backstory:active.backstory||"",greeting:active.greeting,tags:active.tags},messages:pending.slice(-20).map(m=>({role:m.from==="bot"?"assistant":"user",content:m.text}))})});
+const response=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({character:{name:active.name,role:active.role,desc:active.desc,personality:active.personality||"",scenario:active.scenario||"",backstory:active.backstory||"",greeting:active.greeting,tags:active.tags},messages:pending.slice(-20).map(m=>({role:m.from==="bot"?"assistant":"user",content:m.text})),memories:memoryItems.map(item=>({content:item.content}))})});
 if(!response.ok){const data=await response.json().catch(()=>({}));throw new Error(data?.error||"Could not get an AI reply.");}
 if(!response.body)throw new Error("Streaming is not supported by this connection.");
 const reader=response.body.getReader();const decoder=new TextDecoder();let reply="";
