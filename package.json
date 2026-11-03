@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite --host",
-    "build": "vite build && node scripts/prerender-characters.mjs && node scripts/prerender-discover.mjs",
+    "build": "vite build && node scripts/prerender-characters.mjs && node scripts/prerender-discover.mjs && node scripts/discover-prerender-check.mjs",
     "start": "vite preview --host",
     "preview": "vite preview --host",
     "check": "tsc --noEmit",
