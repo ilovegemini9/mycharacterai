@@ -152,7 +152,7 @@ export async function reportMessage(session: AppSession, messageId: string, reas
 
 
 const IMAGE_BUCKET = "community-images";
-const MAX_COMMUNITY_IMAGE_BYTES = 5 * 1024 * 1024;
+const MAX_COMMUNITY_IMAGE_BYTES = 3 * 1024 * 1024;
 
 function imageToBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -182,7 +182,7 @@ export async function moderateAndUploadCommunityImage(
     throw new Error("Choose a JPG, PNG, or WebP image.");
   }
   if (file.size <= 0 || file.size > MAX_COMMUNITY_IMAGE_BYTES) {
-    throw new Error("Image must be smaller than 5 MB.");
+    throw new Error("Image must be smaller than 3 MB.");
   }
 
   const base64 = await imageToBase64(file);
