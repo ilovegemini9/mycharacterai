@@ -192,28 +192,10 @@ export async function moderateAndUploadCommunityImage(
     body: JSON.stringify({ image: base64, mimeType: file.type, purpose })
   });
   const moderation = await moderationResponse.json().catch(() => ({}));
-  if (!moderationResponse.ok || moderation.approved !== true) {
+  if (!moderationResponse.ok || moderation.approved !== true || typeof moderation.imageUrl !== "string") {
     throw new Error(moderation.message || "This image could not be approved. Try a different image.");
   }
-
-  const extension = file.type === "image/jpeg" ? "jpg" : file.type === "image/png" ? "png" : "webp";
-  const objectPath = session.user.id + "/" + purpose + "/" + Date.now() + "-" + crypto.randomUUID() + "." + extension;
-  const uploadResponse = await fetch(SUPABASE_URL + "/storage/v1/object/" + IMAGE_BUCKET + "/" + objectPath, {
-    method: "POST",
-    headers: {
-      apikey: SUPABASE_KEY,
-      Authorization: "Bearer " + session.access_token,
-      "Content-Type": file.type,
-      "x-upsert": "false",
-      "cache-control": "3600"
-    },
-    body: file
-  });
-  if (!uploadResponse.ok) {
-    const detail = await uploadResponse.json().catch(() => ({}));
-    throw new Error(detail.message || "Image upload failed. Please try again.");
-  }
-  return SUPABASE_URL + "/storage/v1/object/public/" + IMAGE_BUCKET + "/" + objectPath.split("/").map(encodeURIComponent).join("/");
+  return moderation.imageUrl;
 }
 
 export async function updateCharacterImage(session: AppSession, characterId: string, imageUrl: string): Promise<void> {
