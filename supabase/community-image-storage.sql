@@ -9,7 +9,7 @@ values (
   'community-images',
   'community-images',
   true,
-  5242880,
+  3145728,
   array['image/jpeg', 'image/png', 'image/webp']
 )
 on conflict (id) do update
