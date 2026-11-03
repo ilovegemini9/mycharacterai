@@ -199,9 +199,11 @@ export async function moderateAndUploadCommunityImage(
 }
 
 export async function updateCharacterImage(session: AppSession, characterId: string, imageUrl: string): Promise<void> {
-  await restRequest(
-    "characters?id=eq." + encodeURIComponent(characterId) + "&creator_id=eq." + encodeURIComponent(session.user.id),
-    session,
-    { method: "PATCH", headers: { Prefer: "return=minimal" }, body: JSON.stringify({ image_url: imageUrl }) }
-  );
+  const response = await fetch("/api/update-character-image", {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", Authorization: "Bearer " + session.access_token },
+    body: JSON.stringify({ characterId, imageUrl })
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok || data.updated !== true) throw new Error(data.message || "Could not update this character image.");
 }
