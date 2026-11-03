@@ -1180,3 +1180,9 @@ footer a{color:#aab4d2}
   .combined-discover:has(.discover-page-heading) > .tabs { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 18px; scrollbar-width: none; }
   .combined-discover:has(.discover-page-heading) > .tabs::-webkit-scrollbar { display: none; }
 }
+
+
+@media (min-width: 701px) {
+  .main-content:has(.discover-page-heading) .topbar .top-search { display: none; }
+}
+.combined-discover:has(.discover-page-heading) .card-greeting { display: none; }
