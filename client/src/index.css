@@ -1186,3 +1186,10 @@ footer a{color:#aab4d2}
   .main-content:has(.discover-page-heading) .topbar .top-search { display: none; }
 }
 .combined-discover:has(.discover-page-heading) .card-greeting { display: none; }
+
+
+.profile-image-picker { position: relative; display: inline-flex; align-items: center; cursor: pointer; }
+.profile-image-picker input { display: none; }
+.profile-avatar-editor { flex-wrap: wrap; }
+.profile-avatar-editor small { flex-basis: 100%; color: var(--muted, #aab4d2); font-size: 12px; }
+.creator-form-main input[type="file"] { max-width: 100%; padding: 12px; border: 1px dashed rgba(170,180,210,.35); border-radius: 10px; background: rgba(255,255,255,.025); }
