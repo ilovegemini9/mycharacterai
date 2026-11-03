@@ -15,7 +15,7 @@ If either server-only key is missing, image uploads fail closed: the app will no
 
 ## Supabase Storage setup
 
-Run [community-image-storage.sql](../supabase/community-image-storage.sql) once in the Supabase SQL Editor. It creates a public-read bucket named `community-images`, limited to JPG, PNG, and WebP images up to 5 MB.
+Run [community-image-storage.sql](../supabase/community-image-storage.sql) once in the Supabase SQL Editor. It creates a public-read bucket named `community-images`, limited to JPG, PNG, and WebP images up to 3 MB.
 
 Do not create authenticated INSERT, UPDATE, or DELETE policies for this bucket. All writes must pass through the server moderation endpoint, which verifies the user's Supabase session and uploads with the server-only service role key. Public bucket access is for displaying approved images only.
 
