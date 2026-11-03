@@ -1153,3 +1153,30 @@ footer a{color:#aab4d2}
     font-size: 27px;
   }
 }
+
+
+/* Discover catalog page */
+.discover-page-heading { margin: 42px 0 24px; max-width: 900px; }
+.discover-page-heading h1 { margin: 12px 0 10px; font-size: clamp(34px, 4vw, 52px); line-height: 1.08; letter-spacing: -1.5px; }
+.discover-page-heading > p { max-width: 720px; color: var(--muted, #aab4d2); font-size: 17px; line-height: 1.65; margin: 0; }
+.discover-search-large { width: 100%; max-width: 900px; min-height: 68px; margin: 28px 0 22px; padding: 0 22px; border: 1px solid rgba(170,180,210,.24); border-radius: 16px; background: rgba(255,255,255,.045); display: flex; align-items: center; gap: 14px; }
+.discover-search-large input { flex: 1; min-width: 0; height: 100%; border: 0; outline: 0; background: transparent; color: inherit; font: inherit; font-size: 18px; }
+.discover-results-bar { max-width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 8px 0 16px; }
+.discover-results-bar .results-count { margin: 0; color: var(--muted, #aab4d2); font-size: 14px; }
+.clear-discover-filters { display: inline-flex; align-items: center; gap: 6px; border: 0; background: transparent; color: #c7a6ff; font: inherit; cursor: pointer; }
+.combined-discover:has(.discover-page-heading) > .tabs { display: flex; flex-wrap: wrap; gap: 10px; padding: 10px 0 24px; }
+.combined-discover:has(.discover-page-heading) > .tabs button { min-height: 42px; padding: 0 16px; border: 1px solid rgba(170,180,210,.2); border-radius: 999px; white-space: nowrap; }
+.combined-discover:has(.discover-page-heading) > .tabs button.active { border-color: #a78bfa; background: rgba(167,139,250,.18); color: #fff; }
+.discover-seo-content { max-width: 1100px; margin: 0 auto; padding: 40px 24px; color: #fff; }
+.discover-seo-content h1 { font-size: 2rem; }
+.discover-seo-content ol { display: grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap: 20px; padding-left: 24px; }
+.discover-seo-content article { padding: 16px; border: 1px solid #45404f; border-radius: 12px; }
+.discover-seo-content a { color: inherit; }
+@media (max-width: 700px) {
+  .discover-page-heading { margin-top: 26px; }
+  .discover-page-heading h1 { font-size: 34px; }
+  .discover-search-large { min-height: 58px; padding: 0 15px; }
+  .discover-search-large input { font-size: 15px; }
+  .combined-discover:has(.discover-page-heading) > .tabs { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 18px; scrollbar-width: none; }
+  .combined-discover:has(.discover-page-heading) > .tabs::-webkit-scrollbar { display: none; }
+}
