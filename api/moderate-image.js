@@ -20,13 +20,14 @@ export default async function handler(req, res) {
   const supabaseUrl = process.env.VITE_SUPABASE_URL;
   const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
   const moderationKey = process.env.OPENAI_API_KEY;
+  const storageServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   const authorization = req.headers.authorization || "";
   const accessToken = authorization.startsWith("Bearer ") ? authorization.slice(7) : "";
   if (!supabaseUrl || !supabaseKey || !accessToken) {
     return respond(res, 401, { approved: false, message: "Sign in before uploading an image." });
   }
 
-  if (!moderationKey) {
+  if (!moderationKey || !storageServiceKey) {
     return respond(res, 503, { approved: false, message: "Image safety checks are temporarily unavailable. Please try again later." });
   }
 
@@ -45,6 +46,7 @@ export default async function handler(req, res) {
       headers: { apikey: supabaseKey, Authorization: "Bearer " + accessToken }
     });
     if (!userResponse.ok) return respond(res, 401, { approved: false, message: "Your session has expired. Sign in again." });
+    const user = await userResponse.json();
 
     const moderationResponse = await fetch("https://api.openai.com/v1/moderations", {
       method: "POST",
@@ -74,7 +76,26 @@ export default async function handler(req, res) {
       return respond(res, 422, { approved: false, message: "This image did not pass the platform safety check." });
     }
 
-    return respond(res, 200, { approved: true });
+    const extension = mimeType === "image/jpeg" ? "jpg" : mimeType === "image/png" ? "png" : "webp";
+    const objectPath = user.id + "/" + purpose + "/" + Date.now() + "-" + crypto.randomUUID() + "." + extension;
+    const uploadResponse = await fetch(new URL("/storage/v1/object/community-images/" + objectPath, supabaseUrl), {
+      method: "POST",
+      headers: {
+        apikey: storageServiceKey,
+        Authorization: "Bearer " + storageServiceKey,
+        "Content-Type": mimeType,
+        "x-upsert": "false",
+        "cache-control": "3600"
+      },
+      body: Buffer.from(image, "base64")
+    });
+    if (!uploadResponse.ok) {
+      console.error("Approved image storage upload failed:", uploadResponse.status);
+      return respond(res, 502, { approved: false, message: "The image passed safety checks but could not be saved. Please try again." });
+    }
+
+    const imageUrl = new URL("/storage/v1/object/public/community-images/" + objectPath.split("/").map(encodeURIComponent).join("/"), supabaseUrl).toString();
+    return respond(res, 200, { approved: true, imageUrl });
   } catch (error) {
     console.error("Image moderation request failed:", error instanceof Error ? error.message : "Unknown error");
     return respond(res, 503, { approved: false, message: "Image safety checks are temporarily unavailable. Please try again later." });
