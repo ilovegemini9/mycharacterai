@@ -80,17 +80,17 @@ const jsonLd = JSON.stringify({
 }).replace(/</g, "\\u003c");
 
 let output = template;
-output = output.replace(/<title>[\\s\\S]*?<\\/title>/i, "<title>" + escapeHtml(TITLE) + "</title>");
-output = output.replace(/<meta name="description" content="[^"]*"\\s*\\/>/i, '<meta name="description" content="' + escapeHtml(DESCRIPTION) + '" />');
-output = output.replace(/<link rel="canonical" href="[^"]*"\\s*\\/>/i, '<link rel="canonical" href="' + CANONICAL + '" />');
-output = output.replace(/<meta property="og:title" content="[^"]*"\\s*\\/>/i, '<meta property="og:title" content="' + escapeHtml(TITLE) + '" />');
-output = output.replace(/<meta property="og:description" content="[^"]*"\\s*\\/>/i, '<meta property="og:description" content="' + escapeHtml(DESCRIPTION) + '" />');
-output = output.replace(/<meta property="og:url" content="[^"]*"\\s*\\/>/i, '<meta property="og:url" content="' + CANONICAL + '" />');
-output = output.replace(/<meta name="twitter:title" content="[^"]*"\\s*\\/>/i, '<meta name="twitter:title" content="' + escapeHtml(TITLE) + '" />');
-output = output.replace(/<meta name="twitter:description" content="[^"]*"\\s*\\/>/i, '<meta name="twitter:description" content="' + escapeHtml(DESCRIPTION) + '" />');
-output = output.replace(/<meta name="robots" content="[^"]*"\\s*\\/>/i, '<meta name="robots" content="index,follow,max-image-preview:large" />');
-output = output.replace(/<meta name="googlebot" content="[^"]*"\\s*\\/>/i, '<meta name="googlebot" content="index,follow,max-image-preview:large" />');
-output = output.replace(/<script type="application\\/ld\\+json">[\\s\\S]*?<\\/script>/i, '<script type="application/ld+json">' + jsonLd + "</script>");
+output = output.replace(/<title>[\s\S]*?<\/title>/i, "<title>" + escapeHtml(TITLE) + "</title>");
+output = output.replace(/<meta name="description" content="[^"]*"\s*\/>/i, '<meta name="description" content="' + escapeHtml(DESCRIPTION) + '" />');
+output = output.replace(/<link rel="canonical" href="[^"]*"\s*\/>/i, '<link rel="canonical" href="' + CANONICAL + '" />');
+output = output.replace(/<meta property="og:title" content="[^"]*"\s*\/>/i, '<meta property="og:title" content="' + escapeHtml(TITLE) + '" />');
+output = output.replace(/<meta property="og:description" content="[^"]*"\s*\/>/i, '<meta property="og:description" content="' + escapeHtml(DESCRIPTION) + '" />');
+output = output.replace(/<meta property="og:url" content="[^"]*"\s*\/>/i, '<meta property="og:url" content="' + CANONICAL + '" />');
+output = output.replace(/<meta name="twitter:title" content="[^"]*"\s*\/>/i, '<meta name="twitter:title" content="' + escapeHtml(TITLE) + '" />');
+output = output.replace(/<meta name="twitter:description" content="[^"]*"\s*\/>/i, '<meta name="twitter:description" content="' + escapeHtml(DESCRIPTION) + '" />');
+output = output.replace(/<meta name="robots" content="[^"]*"\s*\/>/i, '<meta name="robots" content="index,follow,max-image-preview:large" />');
+output = output.replace(/<meta name="googlebot" content="[^"]*"\s*\/>/i, '<meta name="googlebot" content="index,follow,max-image-preview:large" />');
+output = output.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/i, '<script type="application/ld+json">' + jsonLd + "</script>");
 output = output.replace('<div id="root"></div>', '<div id="root">' + content + "</div>");
 
 const directory = path.join(OUTPUT_DIR, "discover");
