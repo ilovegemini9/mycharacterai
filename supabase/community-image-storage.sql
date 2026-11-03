@@ -1,7 +1,8 @@
--- CharacterPlay community image storage setup
--- Run once in Supabase SQL Editor after deploying the image-upload feature.
--- Public reads are intentional so approved profile and character images can render without a login.
--- Upload, replacement, and deletion remain restricted to each user's own folder.
+-- CharacterPlay community image storage setup.
+-- Run once in Supabase SQL Editor after configuring the server environment variables.
+-- The bucket is public for approved image display. Client-side writes are intentionally
+-- NOT allowed: uploads must go through /api/moderate-image, which verifies the session,
+-- checks the image, and writes with the server-only service role key.
 
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 values (
@@ -16,36 +17,5 @@ set public = excluded.public,
     file_size_limit = excluded.file_size_limit,
     allowed_mime_types = excluded.allowed_mime_types;
 
-drop policy if exists "Community image owners can upload" on storage.objects;
-create policy "Community image owners can upload"
-on storage.objects
-for insert
-to authenticated
-with check (
-  bucket_id = 'community-images'
-  and (storage.foldername(name))[1] = (select auth.uid())::text
-);
-
-drop policy if exists "Community image owners can update" on storage.objects;
-create policy "Community image owners can update"
-on storage.objects
-for update
-to authenticated
-using (
-  bucket_id = 'community-images'
-  and (storage.foldername(name))[1] = (select auth.uid())::text
-)
-with check (
-  bucket_id = 'community-images'
-  and (storage.foldername(name))[1] = (select auth.uid())::text
-);
-
-drop policy if exists "Community image owners can delete" on storage.objects;
-create policy "Community image owners can delete"
-on storage.objects
-for delete
-to authenticated
-using (
-  bucket_id = 'community-images'
-  and (storage.foldername(name))[1] = (select auth.uid())::text
-);
+-- Do not add authenticated INSERT/UPDATE/DELETE policies for this bucket.
+-- The service role key is used only by the server API and must never be exposed to browsers.
