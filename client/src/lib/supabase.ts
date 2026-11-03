@@ -149,3 +149,77 @@ export async function deleteCharacterMemory(session: AppSession, memoryId: strin
 export async function reportMessage(session: AppSession, messageId: string, reason: string): Promise<void> {
  await restRequest("message_reports", session, { method:"POST", headers:{Prefer:"return=minimal"}, body:JSON.stringify({message_id:messageId,reporter_id:session.user.id,reason:reason.trim()}) });
 }
+
+
+const IMAGE_BUCKET = "community-images";
+const MAX_COMMUNITY_IMAGE_BYTES = 5 * 1024 * 1024;
+
+function imageToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = String(reader.result || "");
+      const comma = result.indexOf(",");
+      if (comma < 0) reject(new Error("Could not read this image."));
+      else resolve(result.slice(comma + 1));
+    };
+    reader.onerror = () => reject(new Error("Could not read this image."));
+    reader.readAsDataURL(file);
+  });
+}
+
+/**
+ * Images are moderated before they are stored in the public community bucket.
+ * The server endpoint fails closed when moderation is unavailable.
+ */
+export async function moderateAndUploadCommunityImage(
+  session: AppSession,
+  file: File,
+  purpose: "profile" | "character"
+): Promise<string> {
+  if (!SUPABASE_URL || !SUPABASE_KEY) throw new Error("Image storage is not configured.");
+  if (!file.type || !["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+    throw new Error("Choose a JPG, PNG, or WebP image.");
+  }
+  if (file.size <= 0 || file.size > MAX_COMMUNITY_IMAGE_BYTES) {
+    throw new Error("Image must be smaller than 5 MB.");
+  }
+
+  const base64 = await imageToBase64(file);
+  const moderationResponse = await fetch("/api/moderate-image", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: "Bearer " + session.access_token },
+    body: JSON.stringify({ image: base64, mimeType: file.type, purpose })
+  });
+  const moderation = await moderationResponse.json().catch(() => ({}));
+  if (!moderationResponse.ok || moderation.approved !== true) {
+    throw new Error(moderation.message || "This image could not be approved. Try a different image.");
+  }
+
+  const extension = file.type === "image/jpeg" ? "jpg" : file.type === "image/png" ? "png" : "webp";
+  const objectPath = session.user.id + "/" + purpose + "/" + Date.now() + "-" + crypto.randomUUID() + "." + extension;
+  const uploadResponse = await fetch(SUPABASE_URL + "/storage/v1/object/" + IMAGE_BUCKET + "/" + objectPath, {
+    method: "POST",
+    headers: {
+      apikey: SUPABASE_KEY,
+      Authorization: "Bearer " + session.access_token,
+      "Content-Type": file.type,
+      "x-upsert": "false",
+      "cache-control": "3600"
+    },
+    body: file
+  });
+  if (!uploadResponse.ok) {
+    const detail = await uploadResponse.json().catch(() => ({}));
+    throw new Error(detail.message || "Image upload failed. Please try again.");
+  }
+  return SUPABASE_URL + "/storage/v1/object/public/" + IMAGE_BUCKET + "/" + objectPath.split("/").map(encodeURIComponent).join("/");
+}
+
+export async function updateCharacterImage(session: AppSession, characterId: string, imageUrl: string): Promise<void> {
+  await restRequest(
+    "characters?id=eq." + encodeURIComponent(characterId) + "&creator_id=eq." + encodeURIComponent(session.user.id),
+    session,
+    { method: "PATCH", headers: { Prefer: "return=minimal" }, body: JSON.stringify({ image_url: imageUrl }) }
+  );
+}
