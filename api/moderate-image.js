@@ -1,8 +1,8 @@
-const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+const MAX_IMAGE_BYTES = 3 * 1024 * 1024;
 const ALLOWED_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 
 export const config = {
-  api: { bodyParser: { sizeLimit: "7mb" } }
+  api: { bodyParser: { sizeLimit: "5mb" } }
 };
 
 function respond(res, status, body) {
@@ -38,7 +38,7 @@ export default async function handler(req, res) {
 
   const estimatedBytes = Math.floor(image.length * 3 / 4);
   if (!image.length || estimatedBytes > MAX_IMAGE_BYTES || !/^[A-Za-z0-9+/]+={0,2}$/.test(image)) {
-    return respond(res, 413, { approved: false, message: "Image must be smaller than 5 MB." });
+    return respond(res, 413, { approved: false, message: "Image must be smaller than 3 MB." });
   }
 
   try {
